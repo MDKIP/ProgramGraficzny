@@ -1,0 +1,16 @@
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.csprojResolveAssemblyReference.cache
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.StartForm.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.Properties.Resources.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.csproj.GenerateResource.cache
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.csproj.CoreCompileInputs.cache
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\WindowsFormsUI.exe.config
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\WindowsFormsUI.exe
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\WindowsFormsUI.pdb
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\ProgramGraficznyClasses.dll
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\ProgramGraficznyClasses.pdb
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.csproj.CopyComplete
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.exe
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.pdb
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.GraphicsEditor.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.ToolboxForm.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.NewGraphicForm.resources
