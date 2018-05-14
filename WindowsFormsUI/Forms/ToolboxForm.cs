@@ -20,8 +20,6 @@ namespace WindowsFormsUI
         public ToolboxForm(ILog log)
         {
             // Przypisywanie.
-            MainToolbox = new Toolbox();
-            currentColor = Color.White;
             this.log = log;
             MainToolbox.CurrentPen = new Pen(Color.White);
             MainToolbox.CurrentTool = Tools.DrawLine;
@@ -36,18 +34,25 @@ namespace WindowsFormsUI
         /// <summary>
         /// IToolbox który jest kontrolowany przez ten ToolboxForm.
         /// </summary>
-        public IToolbox MainToolbox { get; private set; }
+        public IToolbox MainToolbox { get; private set; } = new Toolbox();
 
-        private Color currentColor;
+        private Color currentColor = Color.White;
         private Size prevSize;
         private int[] prevousCustomsColorOfColorDialog;
         private ILog log;
 
+        /// <summary>
+        /// Tworzy nowy pędzel i ustawia go w toolboxie.
+        /// </summary>
         public void CreatePen()
         {
             MainToolbox.CurrentPen = new Pen(currentColor, (float)nudPenSize.Value);
             log.Write($"Nowy Pen został utworzony w ToolboxForm używając koloru ({currentColor.ToString()}) i szerokości wynoszącej ({(float)nudPenSize.Value}).", LogMessagesTypes.Detail);
         }
+        /// <summary>
+        /// Ustawia layout dla typu.
+        /// </summary>
+        /// <param name="t">Typ.</param>
         public void SetLayout(Tools t)
         {
             switch (t)
@@ -67,6 +72,10 @@ namespace WindowsFormsUI
                 nudPenSize.Visible = show;
             }
         }
+        /// <summary>
+        /// Zwraca obecny tool z inputu.
+        /// </summary>
+        /// <returns></returns>
         public Tools GetCurrentToolFromInput()
         {
             switch (cmbTools.Text)
@@ -82,7 +91,7 @@ namespace WindowsFormsUI
 
         private void ToolboxForm_Load(object sender, EventArgs e)
         {
-            log.Write("ToolboxForm was loaded.");
+            log.Write("ToolboxForm został załadowany.", LogMessagesTypes.Important);
             Text = "Toolbox";
             prevSize = Size;
         }
@@ -91,29 +100,28 @@ namespace WindowsFormsUI
             Size difference = Size - prevSize;
             cmbTools.Size = new Size(cmbTools.Size.Width + difference.Width, cmbTools.Size.Height);
             nudPenSize.Size = new Size(nudPenSize.Size.Width + difference.Width, nudPenSize.Size.Height);
+            btnSetColorForPen.Size = new Size(btnSetColorForPen.Size.Width + difference.Width, btnSetColorForPen.Size.Height);
             prevSize = Size;
         }
         private void cmbTools_SelectedIndexChanged(object sender, EventArgs e)
         {
-            log.Write("Selected Index of cmbTools in ToolboxForm was changed.");
             MainToolbox.CurrentTool = GetCurrentToolFromInput();
             SetLayout(MainToolbox.CurrentTool);
         }
         private void nudPenSize_ValueChanged(object sender, EventArgs e)
         {
-            log.Write("Value of nudPenSize in ToolboxForm was changed.");
             CreatePen();
         }
         private void btnSetColorForPen_Click(object sender, EventArgs e)
         {
-            log.Write("Button btnSetColorForPen in ToolboxForm was clicked.");
+            log.Write("Użytkownik chce wybrać kolor.", LogMessagesTypes.Important);
             ColorDialog dialog = new ColorDialog();
             dialog.CustomColors = prevousCustomsColorOfColorDialog;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 prevousCustomsColorOfColorDialog = dialog.CustomColors;
                 currentColor = dialog.Color;
-                log.Write($"User select color ({currentColor.ToString()}) in ToolboxForm.");
+                log.Write($"Użytkownik wybrał kolor ({currentColor.ToString()}).");
                 CreatePen();
             }
         }

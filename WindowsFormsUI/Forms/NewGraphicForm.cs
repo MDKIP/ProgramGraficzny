@@ -16,26 +16,34 @@ namespace WindowsFormsUI
     {
         public NewGraphicForm(IProject project, ILog log)
         {
-            sizeOfPixelArt = 32;
+            // Wywalanie wyjątków.
+            if (log == null)
+            {
+                throw new NullReferenceException("ILog jest pusty.");
+            }
+
+            log.Write("Nowa instancja NewGraphicForm została utworzona pomyślnie.", LogMessagesTypes.Detail);
+
+            // Przypisywanie.
             this.project = project;
             this.log = log;
+
+            // Inicjalizacja komponentów.
             InitializeComponent();
-            log.Write("New instance of NewGraphicForm was created.");
         }
 
         private Image imgForImgTypeProject;
-        private int sizeOfPixelArt;
+        private int sizeOfPixelArt = 32;
         private IProject project;
         private ILog log;
         private GraphicTypes type;
 
         /// <summary>
-        /// Sets the layotu to the type.
+        /// Ustawia layout do typu.
         /// </summary>
-        /// <param name="t">Type to set layout.</param>
+        /// <param name="t">Typ.</param>
         private void SetLayout(GraphicTypes t)
         {
-            log.Write("SetLayout in NewGraphicForm was invoked.");
             switch (t)
             {
                 case GraphicTypes.Empty:
@@ -49,7 +57,7 @@ namespace WindowsFormsUI
                     txtHeight.Visible = true;
                     btnSelectImage.Visible = false;
                     cmbSizeOfPixelArt.Visible = false;
-                    log.Write("NewGraphicForm layout is now Empty.");
+                    log.Write("NewGraphicForm layout jest od teraz Empty.", LogMessagesTypes.Important);
                     break;
                 case GraphicTypes.Image:
                     lblWidth.Visible = false;
@@ -62,7 +70,7 @@ namespace WindowsFormsUI
                     txtHeight.Visible = false;
                     btnSelectImage.Visible = true;
                     cmbSizeOfPixelArt.Visible = false;
-                    log.Write("NewGraphicForm layout is now Image.");
+                    log.Write("NewGraphicForm layout jest od teraz Image.", LogMessagesTypes.Important);
                     break;
                 case GraphicTypes.PixelArt:
                     lblWidth.Visible = false;
@@ -75,20 +83,22 @@ namespace WindowsFormsUI
                     txtHeight.Visible = false;
                     btnSelectImage.Visible = false;
                     cmbSizeOfPixelArt.Visible = true;
-                    log.Write("NewGraphicForm layout is now PixelArt.");
+                    log.Write("NewGraphicForm layout jest od teraz PixelArt.", LogMessagesTypes.Important);
                     break;
             }
         }
 
         private void NewGraphicForm_Load(object sender, EventArgs e)
         {
-            log.Write("NewGraphicForm was loaded.");
+            log.Write("NewGraphicForm został załadowany.", LogMessagesTypes.Important);
+
             Text = "Nowa Grafika";
+
             SetLayout(GraphicTypes.Empty);
         }
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            log.Write("Button btnCreate in NewGraphicForm was clicked.");
+            log.Write("Tworznie nowej grafiki.", LogMessagesTypes.Important);
             switch (type)
             {
                 case GraphicTypes.Empty:
@@ -132,7 +142,6 @@ namespace WindowsFormsUI
                     MessageBox.Show("Wybacz ale ten tryb grafiki jest niedostępny w tej wersji programu.");
                     break;
                 case GraphicTypes.PixelArt:
-                    log.Write("Creating new graphic of type PixelArt.");
                     object[] param = {sizeOfPixelArt};
                     GraphicsEditor editor3 = new GraphicsEditor(project, ProgramInfo.MainToolbox, GraphicTypes.PixelArt, log, param);
                     editor3.Show();
@@ -144,14 +153,13 @@ namespace WindowsFormsUI
         }
         private void btnSelectImage_Click(object sender, EventArgs e)
         {
-            log.Write("button btnSelectImage in NewGraphicForm was clicked.");
+            log.Write("Użytkownik chce wybrać zdjęcie do nowej grafiki.", LogMessagesTypes.Important);
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 if (!dialog.FileName.EndsWith(".jpg"))
                 {
-                    MessageBox.Show("MUSISZ JPGa JEBNĄĆ ZJEBIE", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    log.Write("USER ERROR: Image which user select isn't jpg file.");
+                    MessageBox.Show("MUSISZ JPGa DAĆ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 imgForImgTypeProject = Image.FromFile(dialog.FileName);
@@ -162,33 +170,26 @@ namespace WindowsFormsUI
         }
         private void cmbGraphicType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            log.Write("Selected Index of cmbGraphicType was changed.");
             switch (cmbGraphicType.Text)
             {
                 case "Pusta":
-                    log.Write("Empty type is detected in NewGraphicForm.");
                     type = GraphicTypes.Empty;
                     break;
                 case "Zdjęcie":
-                    log.Write("Image type is detected in NewGraphicForm.");
                     type = GraphicTypes.Image;
                     break;
                 case "Piksel Art":
-                    log.Write("PixelArt type is detected in NewGraphicForm.");
                     type = GraphicTypes.PixelArt;
                     break;
                 default:
-                    MessageBox.Show("WYBIERZ PRAWIDŁOWY TYP AMEBO UMYSŁOWA", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    log.Write("USER ERROR: Selected type is incorrect.");
+                    MessageBox.Show("WYBIERZ PRAWIDŁOWY TYP", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
             SetLayout(type);
         }
         private void cmbSizeOfPixelArt_SelectedIndexChanged(object sender, EventArgs e)
         {
-            log.Write("Selected Index of cmbGraphicType was changed.");
             sizeOfPixelArt = int.Parse(cmbSizeOfPixelArt.Text);
-            log.Write($"Size of PixelArt is now {sizeOfPixelArt}.");
         }
     }
 }

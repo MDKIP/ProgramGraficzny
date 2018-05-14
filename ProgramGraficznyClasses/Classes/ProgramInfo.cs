@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 namespace ProgramGraficznyClasses
 {
     /// <summary>
-    /// Class containts info about program.
+    /// Zawiera podstawowe informacje o programie.
     /// </summary>
     static public class ProgramInfo
     {
         /// <summary>
-        /// Main toolbox for all Graphics Editors.
-        /// </summary>
-        static public IToolbox MainToolbox { get; set; }
-        /// <summary>
-        /// Has program have a main toolbox.
+        /// Czy program posiada domyślny toolbox.
         /// </summary>
         static public bool HasMainToolbox { get => (MainToolbox != null); }
         /// <summary>
-        /// Name of program.
+        /// Nazwa programu.
         /// </summary>
         static public string ProgramName { get; } = "Program Graficzny";
         /// <summary>
-        /// Version of program.
+        /// Wersja programu.
         /// </summary>
         static public string Version { get; } = "Alpha 0.1";
+        /// <summary>
+        /// Domyślny toolbox.
+        /// </summary>
+        static public IToolbox MainToolbox { get; set; }
     }
 }

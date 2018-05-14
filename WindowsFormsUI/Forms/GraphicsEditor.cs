@@ -16,32 +16,38 @@ namespace WindowsFormsUI
     public partial class GraphicsEditor : Form
     {
         /// <summary>
-        /// Standard constructor for GraphicsEditor.
+        /// Standardowy konstruktor dla GraphicsEditor.
         /// </summary>
-        /// <param name="projectForThisGraphics">Project for this graphic. Can be null.</param>
-        /// <param name="toolboxForThisEditor">Toolbox for this editor.</param>
-        /// <param name="type">Type of this graphic.</param>
-        /// <param name="log">ILog for this GraphicsEditor.</param>
+        /// <param name="projectForThisGraphics">Projekt dla tego edytora graficznego. Może być pusty.</param>
+        /// <param name="toolboxForThisEditor">Toolbox z którego ten edytor będzie pobierać informacje.</param>
+        /// <param name="type">Typ tej grafiki.</param>
+        /// <param name="log">Log dla tego edytora graficznego.</param>
+        /// <param name="plusParams">Dodatkowe parametry zależne od typu grafiki.</param>
         public GraphicsEditor(IProject projectForThisGraphics, IToolbox toolboxForThisEditor, GraphicTypes type, ILog log, object[] plusParams)
         {
-            log.Write("New instance of GraphicsEditor was created.");
-            // Throwing exceptions.
-            if (toolboxForThisEditor == null)
+            // Wywalanie wyjątków.
+            if (log == null) // Jeżeli log jest pusty.
             {
-                throw new NullReferenceException("Toolbox cannot be null.");
+                throw new NullReferenceException("Log nie może być pusty.");
+            }
+            else if (toolboxForThisEditor == null) // Jeżeli toolbox jest pusty.
+            {
+                throw new NullReferenceException("Toolbox nie może być pusty.");
             }
 
-            // Initialazing.
+            log.Write("Nowa instancja edytora graficznego została utworzona pomyślnie.", LogMessagesTypes.Detail);
+
+            // Inicjalizacja komponentów.
             InitializeComponent();
 
-            // Setting.
+            // Przypisywanie.
             this.log = log;
             standardEditor = Graphic = new Graphic(projectForThisGraphics, pcbWorkSpace.CreateGraphics(), log);
             toolbox = toolboxForThisEditor;
             Project = projectForThisGraphics;
             Type = type;
 
-            // Creating MainMenu.
+            // Tworzenie Menu Głównego.
             MainMenu mainMenu = new MainMenu();
             MenuItem fileItem = new MenuItem("Plik");
             MenuItem newItem = new MenuItem("Nowy", newItem_Click);
@@ -49,13 +55,14 @@ namespace WindowsFormsUI
             MenuItem graphicItem = new MenuItem("Grafika");
             MenuItem addImageItem = new MenuItem("Dodaj zdjęcie", addImageItem_Click);
             mainMenu.MenuItems.Add(fileItem);
+            fileItem.MenuItems.Add(newItem);
             fileItem.MenuItems.Add(saveItem);
             mainMenu.MenuItems.Add(graphicItem);
             graphicItem.MenuItems.Add(addImageItem);
             Menu = mainMenu;
 
-            // Instructions for PixelArt graphic.
-            if (type == GraphicTypes.PixelArt)
+            // Instrukcje dla PixelArt'ów.
+            if (type == GraphicTypes.PixelArt) // Jeżeli grafika jest pixel artem.
             {
                 SetWorkSpaceSize(new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height));
                 sizeOfPixelArt = (int)plusParams[0];
@@ -64,13 +71,16 @@ namespace WindowsFormsUI
         }
 
         /// <summary>
-        /// Project of this graphic.
+        /// Projekt w którym znajduje się ta grafika. Może być pusty.
         /// </summary>
         public IProject Project { get; private set; }
         /// <summary>
-        /// Graphic of this graphic editor.
+        /// IGraphic tego graficznego edytora.
         /// </summary>
         public IGraphic Graphic { get; private set; }
+        /// <summary>
+        /// Typ tej grafiki.
+        /// </summary>
         public GraphicTypes Type { get; private set; }
 
         private int sizeOfPixelArt;
@@ -79,13 +89,20 @@ namespace WindowsFormsUI
         private IToolbox toolbox;
         private ILog log;
 
+        /// <summary>
+        /// Rysuje siatkę dla PixelArtu.
+        /// </summary>
         private void DrawLinesForPixelArt()
         {
             DrawLinesForPixelArt(sizeOfPixelArt);
         }
+        /// <summary>
+        /// Rysuje siatkę dla PixelArtu z określoną ilością bajtów (w budowie).
+        /// </summary>
+        /// <param name="bytes">Bajty tego PixelArtu. Np 16, 32, 64</param>
         private void DrawLinesForPixelArt(int bytes)
         {
-            log.Write($"Rysowanie linii dla piksel artów dla rozmiaru {bytes}.");
+            log.Write($"Rysowanie linii dla piksel artów dla rozmiaru {bytes}.", LogMessagesTypes.Important);
             if (bytes <= 0) return;
             int xDistance = Size.Width / bytes - 5;
             int yDistance = Size.Height / bytes - 5;
@@ -93,7 +110,7 @@ namespace WindowsFormsUI
             Pen blackPen = new Pen(Color.Black, 2);
             if (xDistance >= yDistance)
             {
-                log.Write("Dostosywanie linii do rozmiaru osi Y.");
+                log.Write("Dostosywanie linii do rozmiaru osi Y.", LogMessagesTypes.Detail);
                 int nonDrawBorder = bytes * yDistance;
                 for (int i = 0; i < bytes + 1; i++)
                 {
@@ -101,7 +118,7 @@ namespace WindowsFormsUI
                     pos.X += yDistance;
                 }
                 pos.X = 0;
-                for (int i = 0; i < bytes; i++)
+                for (int i = 0; i < bytes + 1; i++)
                 {
                     Graphic.DrawLine(blackPen, pos, new Point(Size.Width, pos.Y), true);
                     pos.Y += yDistance;
@@ -109,9 +126,9 @@ namespace WindowsFormsUI
             }
             else
             {
-                log.Write("Dostosywanie linii do rozmiaru osi X.");
+                log.Write("Dostosywanie linii do rozmiaru osi X.", LogMessagesTypes.Detail);
                 int nonDrawBorder = bytes * yDistance;
-                for (int i = 0; i < bytes; i++)
+                for (int i = 0; i < bytes + 1; i++)
                 {
                     Graphic.DrawLine(blackPen, pos, new Point(pos.X, Size.Height), true);
                     pos.X += xDistance;
@@ -124,31 +141,34 @@ namespace WindowsFormsUI
                 }
             }
         }
+        /// <summary>
+        /// Zwraca koordynaty na siatce PixelArtu z pozycji kliknięcia. (w budowie)
+        /// </summary>
+        /// <param name="click">Punkt kliknięcia.</param>
+        /// <returns>Koordynaty.</returns>
         private Point GetCordinatesForPixelArt(Point click)
         {
             if (Type != GraphicTypes.PixelArt) return new Point();
             throw new NotImplementedException();
         }
         /// <summary>
-        /// Sets the work space of editor.
+        /// Ustawia rozmiar pola roboczego.
         /// </summary>
-        /// <param name="s">Size.</param>
+        /// <param name="s">Nowa wielokość pola roboczego.</param>
         public void SetWorkSpaceSize(Size s)
         {
-            log.Write($"Size of WorkSpace in GraphicsEditor was set as {s.ToString()}.");
+            log.Write($"Rozmiar pola roboczego został ustawiony na {s.ToString()}.");
             pcbWorkSpace.Size = s;
+            Graphic.UpdateGraphics(pcbWorkSpace.CreateGraphics());
+            Graphic.Size = s;
         }
 
         private void GraphicsEditor_Load(object sender, EventArgs e)
         {
-            log.Write("GraphicsEditor was loaded.");
-            Text = "Graphics Editor";
-            Size prevSize = Size;
-            Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
-            Graphic.UpdateGraphics(pcbWorkSpace.CreateGraphics());
-            Graphic.Size = pcbWorkSpace.Size;
-            Size = prevSize;
-            Graphic.DrawAllAgain();
+            log.Write("GraphicsEditor został załadowny.", LogMessagesTypes.Important);
+
+            // Ustawianie tekstu nagłówka.
+            Text = "Edytor";
         }
         private void GraphicsEditor_SizeChanged(object sender, EventArgs e)
         {
@@ -163,7 +183,7 @@ namespace WindowsFormsUI
         }
         private void GraphicsEditor_ResizeEnd(object sender, EventArgs e)
         {
-            log.Write("Resizing of GraphicsEditor was ended.");
+            log.Write("Zmiana rozmiaru okna GraphicsEditor została zakończona.", LogMessagesTypes.Important);
             if (Type == GraphicTypes.Empty || Type == GraphicTypes.Image)
             {
                 Graphic.DrawAllAgain(); 
@@ -178,20 +198,20 @@ namespace WindowsFormsUI
         {
             if (e.Control && e.KeyCode == Keys.Z)
             {
-                log.Write("Z button with Control on keyboard was clicked by user.");
+                log.Write("Użytkownik nacisnął przycisk Z.", LogMessagesTypes.Important);
                 Graphic.ReturnState();
             }
             else if (e.Control && e.KeyCode == Keys.X)
             {
-                log.Write("X button with Control on keyboard was clicked by user.");
+                log.Write("Użytkownik nacisnął przycisk X.", LogMessagesTypes.Important);
                 Graphic.NextState();
             }
         }
         private void GraphicsEditor_LocationChanged(object sender, EventArgs e)
         {
-            if (Graphic != null)
+            if (Graphic != null) // Jeżeli grafika nie jest pusta.
             {
-                Graphic.DrawAllAgain();
+                Graphic.DrawAllAgain(); // (doskonale wiem jak bardzo jest to nieoptymalne rozwiązanie, zostanie przeze mnie zmodyfikowane w przyszłości)
             }
         }
         private void GraphicsEditor_Shown(object sender, EventArgs e)
@@ -207,13 +227,16 @@ namespace WindowsFormsUI
         }
         private void pcbWorkSpace_Click(object sender, EventArgs e)
         {
+            // Pobieranie lokalizacji kursora (muszę to regulować tymi stałymi z jeszcze nieznanego mi powodu)
             int x = MousePosition.X - Location.X - 5;
             int y = MousePosition.Y - Location.Y - 50;
             Point location = new Point(x, y);
-            log.Write($"pcpWorkSpace was clicked by user at position ({location.ToString()}).");
-            if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty)
+
+            log.Write($"Pole robocze zostało klinkniętę na pozycji ({location.ToString()}).");
+
+            if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty) // Jeżeli typ grafki to Image lub Empty.
             {
-                switch (toolbox.CurrentTool)
+                switch (toolbox.CurrentTool) // Różne zachowania dla różnych narzędzi.
                 {
                     case Tools.DrawLine:
                         Graphic.ReturnState();
@@ -221,7 +244,7 @@ namespace WindowsFormsUI
                         break;
                 } 
             }
-            else if (Type == GraphicTypes.PixelArt)
+            else if (Type == GraphicTypes.PixelArt) // Jeżeli typ grafki to PixelArt.
             {
                 
             }
@@ -246,13 +269,13 @@ namespace WindowsFormsUI
         }
         private void newItem_Click(object sender, EventArgs e)
         {
-            log.Write("MenuItem newItem was cliecked by the user.");
+            log.Write("Użytkownik chce utworzyć nową grafikę.", LogMessagesTypes.Important);
             NewGraphicForm dialog = new NewGraphicForm(Project, log);
             dialog.Show();
         }
         private void saveItem_Click(object sender, EventArgs e)
         {
-            log.Write("MenuItem saveItem was cliecked by the user.");
+            log.Write("Użytkownik chce zapisać grafikę.", LogMessagesTypes.Important);
             SaveFileDialog dialog = new SaveFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -262,18 +285,18 @@ namespace WindowsFormsUI
                     path += ".jpg";
                 }
                 standardEditor.Save(path);
-                log.Write($"Graphic was saved at {path}.");
+                log.Write($"Grafika została zapisana na ścieżce ({path}).");
             }
         }
         private void addImageItem_Click(object sender, EventArgs e)
         {
-            log.Write("MenuItem addImageItem was cliecked by the user.");
+            log.Write("Użytkownik chce dodać obraz do grafiki.");
             if (Type == GraphicTypes.Empty || Type == GraphicTypes.Image)
             {
                 OpenFileDialog o = new OpenFileDialog();
                 if (o.ShowDialog() == DialogResult.OK)
                 {
-                    log.Write($"New image has been added to graphic from {o.FileName}.");
+                    log.Write($"Nowy obraz został dodany z ({o.FileName}).");
                     Graphic.DrawImage(Image.FromFile(o.FileName), 0, 0);
                 }   
             }

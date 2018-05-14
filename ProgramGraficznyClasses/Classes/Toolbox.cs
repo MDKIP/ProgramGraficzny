@@ -7,16 +7,22 @@ using System.Drawing;
 
 namespace ProgramGraficznyClasses
 {
+    /// <summary>
+    /// Klasa przetrzymująca toolboxowe elementy.
+    /// </summary>
     public class Toolbox : IToolbox
     {
         /// <summary>
-        /// The current pen in toolbox.
+        /// Obecny pędzel.
         /// </summary>
         public Pen CurrentPen { get; set; }
         /// <summary>
-        /// Current tool.
+        /// Obecny kolor.
+        /// </summary>
+        public Color CurrentColor { get; set; }
+        /// <summary>
+        /// Obecne narzędzie.
         /// </summary>
         public Tools CurrentTool { get; set; }
-        public Color CurrentColor { get; set; }
     }
 }

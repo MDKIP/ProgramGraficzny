@@ -17,6 +17,16 @@ namespace ProgramGraficznyClasses
         /// <param name="typeBeforeMsg">Czy przed wiadomością ma być jej typ (type: msg). Domyślnie false.</param>
         public LogManager(string pathToLog, List<LogMessagesTypes> acceptableTypes, bool typeBeforeMsg = false)
         {
+            // Wywalanie wyjątków.
+            if (acceptableTypes == null) // Jeżeli acceptableTypes są null.
+            {
+                throw new NullReferenceException("acceptableTypes nie mogą być puste.");
+            }
+            else if (pathToLog == string.Empty) // Jeżeli ścieżka do pliku logu jest pusta.
+            {
+                throw new ArgumentNullException("pathToLog", "Ścieżka nie może być pusta.");
+            }
+
             // Przypisywanie.
             this.pathToLog = pathToLog;
             this.acceptableTypes = acceptableTypes;
@@ -56,9 +66,9 @@ namespace ProgramGraficznyClasses
         /// <param name="type">Typ wiadomości.</param>
         public void Write(string msg, LogMessagesTypes type)
         {
-            if (acceptableTypes.Contains(type)) // Czy typ jest dozwolony?
+            if (acceptableTypes.Contains(type)) // Jeżeli typ wiadomości jest w dozwolonych typach.
             {
-                if (typeBeforeMsg) // Czy log ma zapisać typ wiadomości przed wiadomością?
+                if (typeBeforeMsg) // Jeżeli log ma zapisać typ wiadomości przed wiadomością.
                 {
                     // Zapisywanie zmodyfikowanej wiadomości do logu.
                     Write($"{type.ToString().ToUpper()}: {msg}");

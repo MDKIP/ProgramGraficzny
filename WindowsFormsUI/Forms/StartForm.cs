@@ -49,7 +49,6 @@ namespace WindowsFormsUI
         }
         private void btnCreateGraphics_Click(object sender, EventArgs e)
         {
-            log.Write("Przycisk btnCreateGraphics z StartForm został wciśnięty.", LogMessagesTypes.Detail);
             log.Write("Użytkownik chce utworzyć nową grafikę bez projektu.", LogMessagesTypes.Important);
 
             // Pokazywnie nowego forma w którym użytkownik wybierze właściwości nowej grafiki.

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ProgramGraficznyClasses
 {
     /// <summary>
-    /// Class for managing project.
+    /// Klasa do zarządania projektem (w budowie).
     /// </summary>
     public class Project : IProject
     {

@@ -7,19 +7,24 @@ using System.Drawing;
 
 namespace ProgramGraficznyClasses
 {
+    /// <summary>
+    /// Reprezentuje operację graficzną.
+    /// </summary>
     public class GraphicOperation : IGraphicOperation
     {
         /// <summary>
-        /// Constructor for graphic operation which draws line form point a to point b.
+        /// Konstruktor dla operacji graficznej która rysuje linię od punktu a do punktu b przy użyciu pędzla p.
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="isOnlyEditorOperation"></param>
-        /// <param name="log"></param>
+        /// <param name="p">Pędzel p.</param>
+        /// <param name="a">Punkt a.</param>
+        /// <param name="b">Punkt b.</param>
+        /// <param name="isOnlyEditorOperation">Czy operacja dotyczy tylko edytora?</param>
+        /// <param name="log">Log dla tego obiektu.</param>
         public GraphicOperation(Pen p, Point a, Point b, bool isOnlyEditorOperation, ILog log)
         {
-            log.Write("New instance of GraphicOperation was created and it's type is DrawLine.");
+            log.Write("Nowa graficzna operacja została utworzona. Jej typ to DrawLine.", LogMessagesTypes.Detail);
+
+            // Przypisywanie.
             this.log = log;
             Operation = GraphicOperations.DrawLine;
             IsOnlyEditorOperation = isOnlyEditorOperation;
@@ -30,15 +35,17 @@ namespace ProgramGraficznyClasses
             parameters[3] = isOnlyEditorOperation;
         }
         /// <summary>
-        /// Constructor for graphic operation which draws image.
+        /// Konstruktor dla operacji graficznej która rysuje obraz.
         /// </summary>
-        /// <param name="img"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="isOnlyEditorOperation"></param>
+        /// <param name="img">Obraz do narysowania.</param>
+        /// <param name="x">Pozycja w osi X.</param>
+        /// <param name="y">Pozycja w osi Y.</param>
+        /// <param name="isOnlyEditorOperation">Czy operacja dotyczy tylko edytora?</param>
         public GraphicOperation(Image img, int x, int y, bool isOnlyEditorOperation, ILog log)
         {
-            log.Write("New instance of GraphicOperation was created and it's type is ImagesDrawning.");
+            log.Write("Nowa graficzna operacja została utworzona. Jej typ to ImagesDrawning.", LogMessagesTypes.Detail);
+
+            // Przypisywanie.
             this.log = log;
             Operation = GraphicOperations.ImagesDrawning;
             IsOnlyEditorOperation = isOnlyEditorOperation;
@@ -48,18 +55,26 @@ namespace ProgramGraficznyClasses
             parameters[2] = y;
         }
 
+        /// <summary>
+        /// Czy operacja dotyczy tylko edytora?
+        /// </summary>
         public bool IsOnlyEditorOperation { get; private set; }
+        /// <summary>
+        /// Typ operacji graficznej.
+        /// </summary>
         public GraphicOperations Operation { get; private set; }
 
         private object[] parameters;
         private ILog log;
 
         /// <summary>
-        /// Returns the paramters used to this graphic operation.
+        /// Zwraca parametry tej operacji graficznej.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Parametry jako objecty.</returns>
         public object[] GetParameters()
         {
+            log.Write("Operacja graficzna zwraca parametry.", LogMessagesTypes.Detail);
+
             return parameters;
         }
     }
