@@ -104,23 +104,23 @@ namespace WindowsFormsUI
         {
             log.Write($"Rysowanie linii dla piksel artów dla rozmiaru {bytes}.", LogMessagesTypes.Important);
             if (bytes <= 0) return;
-            int xDistance = Size.Width / bytes - 5;
-            int yDistance = Size.Height / bytes - 5;
+            int xDistance = Size.Width / bytes - 1;
+            int yDistance = Size.Height / bytes - 1;
             Point pos = new Point(0, 0);
-            Pen blackPen = new Pen(Color.Black, 2);
+            Pen blackPen = new Pen(Color.Black, 1);
             if (xDistance >= yDistance)
             {
                 log.Write("Dostosywanie linii do rozmiaru osi Y.", LogMessagesTypes.Detail);
                 int nonDrawBorder = bytes * yDistance;
                 for (int i = 0; i < bytes + 1; i++)
                 {
-                    Graphic.DrawLine(blackPen, pos, new Point(pos.X, Size.Height), true);
+                    Graphic.DrawLine(blackPen, pos, new Point(pos.X, nonDrawBorder), true);
                     pos.X += yDistance;
                 }
                 pos.X = 0;
                 for (int i = 0; i < bytes + 1; i++)
                 {
-                    Graphic.DrawLine(blackPen, pos, new Point(Size.Width, pos.Y), true);
+                    Graphic.DrawLine(blackPen, pos, new Point(nonDrawBorder, pos.Y), true);
                     pos.Y += yDistance;
                 }
             }
@@ -130,13 +130,13 @@ namespace WindowsFormsUI
                 int nonDrawBorder = bytes * yDistance;
                 for (int i = 0; i < bytes + 1; i++)
                 {
-                    Graphic.DrawLine(blackPen, pos, new Point(pos.X, Size.Height), true);
+                    Graphic.DrawLine(blackPen, pos, new Point(pos.X, nonDrawBorder), true);
                     pos.X += xDistance;
                 }
                 pos.X = 0;
                 for (int i = 0; i < bytes + 1; i++)
                 {
-                    Graphic.DrawLine(blackPen, pos, new Point(Size.Width, pos.Y), true);
+                    Graphic.DrawLine(blackPen, pos, new Point(nonDrawBorder, pos.Y), true);
                     pos.Y += xDistance;
                 }
             }
@@ -174,7 +174,7 @@ namespace WindowsFormsUI
         {
             if (Type == GraphicTypes.Empty || Type == GraphicTypes.Image)
             {
-                //Graphic.DrawAllAgain(); 
+                
             }
             else if (Type == GraphicTypes.PixelArt)
             {
@@ -211,7 +211,7 @@ namespace WindowsFormsUI
         {
             if (Graphic != null) // Jeżeli grafika nie jest pusta.
             {
-                Graphic.DrawAllAgain(); // (doskonale wiem jak bardzo jest to nieoptymalne rozwiązanie, zostanie przeze mnie zmodyfikowane w przyszłości)
+                //Graphic.DrawAllAgain(); // (doskonale wiem jak bardzo jest to nieoptymalne rozwiązanie, zostanie przeze mnie zmodyfikowane w przyszłości)
             }
         }
         private void GraphicsEditor_Shown(object sender, EventArgs e)
@@ -232,7 +232,7 @@ namespace WindowsFormsUI
             int y = MousePosition.Y - Location.Y - 50;
             Point location = new Point(x, y);
 
-            log.Write($"Pole robocze zostało klinkniętę na pozycji ({location.ToString()}).");
+            log.Write($"Pole robocze zostało klinkniętę na pozycji ({location.ToString()}).", LogMessagesTypes.Important);
 
             if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty) // Jeżeli typ grafki to Image lub Empty.
             {

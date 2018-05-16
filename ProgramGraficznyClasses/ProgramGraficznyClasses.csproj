@@ -42,21 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Factory.cs" />
-    <Compile Include="Classes\Graphic.cs" />
-    <Compile Include="Classes\GraphicOperation.cs" />
-    <Compile Include="Interfaces\IGraphicEditorStandard.cs" />
-    <Compile Include="Interfaces\ILog.cs" />
-    <Compile Include="Interfaces\IPixelArtController.cs" />
-    <Compile Include="Interfaces\IProject.cs" />
-    <Compile Include="Interfaces\IToolbox.cs" />
-    <Compile Include="Interfaces\IGraphicOperation.cs" />
-    <Compile Include="Classes\LogManager.cs" />
-    <Compile Include="Classes\ProgramInfo.cs" />
-    <Compile Include="Classes\Project.cs" />
-    <Compile Include="Classes\Toolbox.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Interfaces\IGraphic.cs" />
+    <Compile Include="Log\LocalLog.cs" />
+    <Compile Include="_General\Factory.cs" />
+    <Compile Include="Graphics Manipulation\Graphic.cs" />
+    <Compile Include="Graphics Manipulation\GraphicOperation.cs" />
+    <Compile Include="Graphics Manipulation\IGraphicEditorStandard.cs" />
+    <Compile Include="Log\ILog.cs" />
+    <Compile Include="Graphics Manipulation\IPixelArtController.cs" />
+    <Compile Include="Project\IProject.cs" />
+    <Compile Include="Toolbox\IToolbox.cs" />
+    <Compile Include="Graphics Manipulation\IGraphicOperation.cs" />
+    <Compile Include="Log\LogManager.cs" />
+    <Compile Include="_General\ProgramInfo.cs" />
+    <Compile Include="Project\Project.cs" />
+    <Compile Include="Toolbox\Toolbox.cs" />
+    <Compile Include="_General\Enums.cs" />
+    <Compile Include="Graphics Manipulation\IGraphic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

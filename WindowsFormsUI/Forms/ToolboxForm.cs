@@ -19,6 +19,12 @@ namespace WindowsFormsUI
         /// <param name="log">Log do którego będą zapisywane wiadomości.</param>
         public ToolboxForm(ILog log)
         {
+            // Wywalanie wyjątków.
+            if (log == null)
+            {
+                throw new NullReferenceException("log nie może być pusty.");
+            }
+
             // Przypisywanie.
             this.log = log;
             MainToolbox.CurrentPen = new Pen(Color.White);
@@ -38,7 +44,7 @@ namespace WindowsFormsUI
 
         private Color currentColor = Color.White;
         private Size prevSize;
-        private int[] prevousCustomsColorOfColorDialog;
+        private int[] previousCustomsColorOfColorDialog;
         private ILog log;
 
         /// <summary>
@@ -116,12 +122,12 @@ namespace WindowsFormsUI
         {
             log.Write("Użytkownik chce wybrać kolor.", LogMessagesTypes.Important);
             ColorDialog dialog = new ColorDialog();
-            dialog.CustomColors = prevousCustomsColorOfColorDialog;
+            dialog.CustomColors = previousCustomsColorOfColorDialog;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                prevousCustomsColorOfColorDialog = dialog.CustomColors;
+                previousCustomsColorOfColorDialog = dialog.CustomColors;
                 currentColor = dialog.Color;
-                log.Write($"Użytkownik wybrał kolor ({currentColor.ToString()}).");
+                log.Write($"Użytkownik wybrał kolor ({currentColor.ToString()}).", LogMessagesTypes.Important);
                 CreatePen();
             }
         }

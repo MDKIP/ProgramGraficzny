@@ -165,7 +165,7 @@ namespace ProgramGraficznyClasses
             if (!OnlyDrawningMode) // Jeżeli ma zapisać operację.
             {
                 string onlyEditorString = onlyEditor ? "wyłącznie w edytorze" : "na grafice";
-                log.Write($"Rysowanie nowej linni od punktu {a} do punktu {b} pędzlem {p} {onlyEditorString}.", LogMessagesTypes.Important);
+                log.Write($"Rysowanie nowej linni od punktu {a} do punktu {b} pędzlem o szerokości {p.Width} i kolorze {p.Color} {onlyEditorString}.", LogMessagesTypes.Detail);
 
                 operations.Add(new GraphicOperation(p, a, b, onlyEditor, log)); // dodawanie operacji do istniejących operacji
             }
@@ -195,7 +195,7 @@ namespace ProgramGraficznyClasses
             {
                 operations.Add(new GraphicOperation(img, x, y, false, log));
 
-                log.Write($"Nowy obraz został narysowany na pozycji {new Point(x, y)}.", LogMessagesTypes.Important);
+                log.Write($"Nowy obraz został narysowany na pozycji {new Point(x, y)}.", LogMessagesTypes.Detail);
             }
         }
         /// <summary>

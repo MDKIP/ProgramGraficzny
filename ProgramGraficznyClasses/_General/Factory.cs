@@ -12,7 +12,7 @@ namespace ProgramGraficznyClasses
     static public class Factory
     {
         /// <summary>
-        /// Tworzy nowy ILog z użyciem LogManagera.
+        /// Tworzy nowy ILog z użyciem LocalLog.
         /// </summary>
         /// <returns>ILog.</returns>
         static public ILog CreateLog()
@@ -30,8 +30,8 @@ namespace ProgramGraficznyClasses
             // Czy LogManager ma zapisywać typ przed wiadomością?
             bool typeBeforeMsg = true;
 
-            // Zwracanie nowego LogManagera.
-            return new LogManager(path, acceptableTypes, typeBeforeMsg);
+            // Zwracanie nowego ILog.
+            return new LocalLog(acceptableTypes, typeBeforeMsg);
         }
     }
 }

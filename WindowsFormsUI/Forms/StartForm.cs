@@ -19,6 +19,14 @@ namespace WindowsFormsUI
         /// <param name="log">Log do którego będą zapisywane wiadomości.</param>
         public StartForm(ILog log)
         {
+            // Wywalanie wyjątków.
+            if (log == null)
+            {
+                throw new NullReferenceException("log nie może być pusty.");
+            }
+
+            log.Write("Nowa instancja StartForm została utworzona.", LogMessagesTypes.Detail);
+
             // Przypisywanie.
             this.log = log;
 
