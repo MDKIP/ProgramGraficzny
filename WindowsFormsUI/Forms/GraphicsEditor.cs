@@ -23,24 +23,37 @@ namespace WindowsFormsUI
         /// <param name="type">Typ tej grafiki.</param>
         /// <param name="log">Log dla tego edytora graficznego.</param>
         /// <param name="plusParams">Dodatkowe parametry zależne od typu grafiki.</param>
-        public GraphicsEditor(IProject projectForThisGraphics, IToolbox toolboxForThisEditor, GraphicTypes type, ILog log, object[] plusParams)
+        public GraphicsEditor(IProject projectForThisGraphics, IToolbox toolboxForThisEditor, GraphicTypes type, ILog log, INotificator notificator, object[] plusParams)
         {
             // Wywalanie wyjątków.
-            if (log == null) // Jeżeli log jest pusty.
+            if (log == null && notificator == null)
             {
-                throw new NullReferenceException("Log nie może być pusty.");
+                throw new NullReferenceException("log i notificator są puste");
             }
-            else if (toolboxForThisEditor == null) // Jeżeli toolbox jest pusty.
+            else if (log == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("log nie może być pusty.", true));
+                notificator.Notify(error);
+                throw error;
+            }
+            else if (notificator == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("notificator nie może być pusty.", true));
+                log.Write(error.Message);
+                throw error;
+            }
+            else if (toolboxForThisEditor == null) 
             {
                 throw new NullReferenceException("Toolbox nie może być pusty.");
             }
 
-            log.Write("Nowa instancja edytora graficznego została utworzona pomyślnie.", LogMessagesTypes.Detail);
+            log.Write(Factory.GetNewInstanceCreationString("GraphicsEditor"), LogMessagesTypes.Detail);
 
             // Inicjalizacja komponentów.
             InitializeComponent();
 
             // Przypisywanie.
+            this.notificator = notificator;
             this.log = log;
             standardEditor = Graphic = new Graphic(projectForThisGraphics, pcbWorkSpace.CreateGraphics(), log);
             toolbox = toolboxForThisEditor;
@@ -62,7 +75,7 @@ namespace WindowsFormsUI
             Menu = mainMenu;
 
             // Instrukcje dla PixelArt'ów.
-            if (type == GraphicTypes.PixelArt) // Jeżeli grafika jest pixel artem.
+            if (type == GraphicTypes.PixelArt)
             {
                 SetWorkSpaceSize(new Size(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height));
                 sizeOfPixelArt = (int)plusParams[0];
@@ -85,7 +98,7 @@ namespace WindowsFormsUI
 
         private int sizeOfPixelArt;
         private IGraphicEditorStandard standardEditor;
-        private IPixelArtController pixelArtController;
+        private INotificator notificator;
         private IToolbox toolbox;
         private ILog log;
 
@@ -234,7 +247,7 @@ namespace WindowsFormsUI
 
             log.Write($"Pole robocze zostało klinkniętę na pozycji ({location.ToString()}).", LogMessagesTypes.Important);
 
-            if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty) // Jeżeli typ grafki to Image lub Empty.
+            if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty)
             {
                 switch (toolbox.CurrentTool) // Różne zachowania dla różnych narzędzi.
                 {
@@ -244,7 +257,7 @@ namespace WindowsFormsUI
                         break;
                 } 
             }
-            else if (Type == GraphicTypes.PixelArt) // Jeżeli typ grafki to PixelArt.
+            else if (Type == GraphicTypes.PixelArt)
             {
                 
             }
@@ -270,7 +283,7 @@ namespace WindowsFormsUI
         private void newItem_Click(object sender, EventArgs e)
         {
             log.Write("Użytkownik chce utworzyć nową grafikę.", LogMessagesTypes.Important);
-            NewGraphicForm dialog = new NewGraphicForm(Project, log);
+            NewGraphicForm dialog = new NewGraphicForm(Project, log, notificator);
             dialog.Show();
         }
         private void saveItem_Click(object sender, EventArgs e)
@@ -302,7 +315,7 @@ namespace WindowsFormsUI
             }
             else
             {
-                MessageBox.Show("Wklejanie zdjęć nie jest dostępne w trybie PixelArt.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                notificator.Notify((new Exception("Wklejanie zdjęć nie jest dostępne w trybie PixelArt.")).Message);
             }
         }
     }

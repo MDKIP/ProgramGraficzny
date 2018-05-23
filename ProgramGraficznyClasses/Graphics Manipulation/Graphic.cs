@@ -41,6 +41,8 @@ namespace ProgramGraficznyClasses
             IsConnectedWithProject = (project != null);
         }
 
+        public event EventHandler GraphicChanged;
+
         /// <summary>
         /// Wielkość powierzchni rysowania.
         /// </summary>

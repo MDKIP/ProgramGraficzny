@@ -17,23 +17,37 @@ namespace WindowsFormsUI
         /// Standardowy konstruktor dla StartForm.
         /// </summary>
         /// <param name="log">Log do którego będą zapisywane wiadomości.</param>
-        public StartForm(ILog log)
+        public StartForm(ILog log, INotificator notificator)
         {
             // Wywalanie wyjątków.
-            if (log == null)
+            if (log == null && notificator == null)
             {
-                throw new NullReferenceException("log nie może być pusty.");
+                throw new NullReferenceException("log i notificator są puste");
+            }
+            else if (log == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("log nie może być pusty.", true));
+                notificator.Notify(error);
+                throw error;
+            }
+            else if (notificator == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("notificator nie może być pusty.", true));
+                log.Write(error.Message);
+                throw error;
             }
 
-            log.Write("Nowa instancja StartForm została utworzona.", LogMessagesTypes.Detail);
+            log.Write(Factory.GetNewInstanceCreationString("StartForm"), LogMessagesTypes.Detail);
 
             // Przypisywanie.
+            this.notificator = notificator;
             this.log = log;
 
-            // Inicjalizacja komponentów (metoda wygenerowana przez desinger'a)
+            // Inicjalizacja komponentów.
             InitializeComponent();
         }
 
+        private INotificator notificator;
         private ILog log;
 
         private void StartForm_Load(object sender, EventArgs e)
@@ -44,14 +58,11 @@ namespace WindowsFormsUI
             Text = $"{ProgramInfo.ProgramName} ({ProgramInfo.Version})";
 
             // Ustawianie głównego toolboxa programu.
-            if (!ProgramInfo.HasMainToolbox) // Jeżeli program nie ma głównego toolboxa.
+            if (!ProgramInfo.HasMainToolbox)
             {
                 log.Write("Tworzenie nowego toolboxa który będzie domyślny dla całego programu.", LogMessagesTypes.Important);
-                // Pokazywanie nowego forma obsugującego toolboxa.
-                ToolboxForm toolbox = new ToolboxForm(log);
+                ToolboxForm toolbox = new ToolboxForm(log, notificator);
                 toolbox.Show();
-
-                // Ustawianie nowego toolboxa jako toolbox dla całego programu.
                 ProgramInfo.MainToolbox = toolbox.MainToolbox;
             }
         }
@@ -60,7 +71,7 @@ namespace WindowsFormsUI
             log.Write("Użytkownik chce utworzyć nową grafikę bez projektu.", LogMessagesTypes.Important);
 
             // Pokazywnie nowego forma w którym użytkownik wybierze właściwości nowej grafiki.
-            NewGraphicForm form = new NewGraphicForm(null, log);
+            NewGraphicForm form = new NewGraphicForm(null, log, notificator);
             form.Show();
         }
     }

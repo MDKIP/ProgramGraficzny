@@ -42,17 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics Manipulation\BitmapManipulator.cs" />
+    <Compile Include="Graphics Manipulation\EventArgs\GraphicChangedEventArgs.cs" />
     <Compile Include="Log\LocalLog.cs" />
+    <Compile Include="Notifications\INotificator.cs" />
+    <Compile Include="Notifications\MessageBoxNotificator.cs" />
     <Compile Include="_General\Factory.cs" />
     <Compile Include="Graphics Manipulation\Graphic.cs" />
     <Compile Include="Graphics Manipulation\GraphicOperation.cs" />
     <Compile Include="Graphics Manipulation\IGraphicEditorStandard.cs" />
     <Compile Include="Log\ILog.cs" />
-    <Compile Include="Graphics Manipulation\IPixelArtController.cs" />
     <Compile Include="Project\IProject.cs" />
     <Compile Include="Toolbox\IToolbox.cs" />
     <Compile Include="Graphics Manipulation\IGraphicOperation.cs" />
     <Compile Include="Log\LogManager.cs" />
+    <Compile Include="_General\PlusMethods.cs" />
     <Compile Include="_General\ProgramInfo.cs" />
     <Compile Include="Project\Project.cs" />
     <Compile Include="Toolbox\Toolbox.cs" />

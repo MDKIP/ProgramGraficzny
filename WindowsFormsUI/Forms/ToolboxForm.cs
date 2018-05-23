@@ -17,20 +17,35 @@ namespace WindowsFormsUI
         /// Standardowy konstruktor dla ToolboxForm.
         /// </summary>
         /// <param name="log">Log do którego będą zapisywane wiadomości.</param>
-        public ToolboxForm(ILog log)
+        public ToolboxForm(ILog log, INotificator notificator)
         {
             // Wywalanie wyjątków.
-            if (log == null)
+            if (log == null && notificator == null)
             {
-                throw new NullReferenceException("log nie może być pusty.");
+                throw new NullReferenceException("log i notificator są puste");
+            }
+            else if (log == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("log nie może być pusty.", true));
+                notificator.Notify(error);
+                throw error;
+            }
+            else if (notificator == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("notificator nie może być pusty.", true));
+                log.Write(error.Message);
+                throw error;
             }
 
+            log.Write(Factory.GetNewInstanceCreationString("ToolboxForm"), LogMessagesTypes.Detail);
+
             // Przypisywanie.
+            this.notificator = notificator;
             this.log = log;
             MainToolbox.CurrentPen = new Pen(Color.White);
             MainToolbox.CurrentTool = Tools.DrawLine;
 
-            // Inicjalizacja komponentów (metoda wygenerowana przez designer'a).
+            // Inicjalizacja komponentów.
             InitializeComponent();
             
             // Operacje przygotowywujące ToolboxForm do wyświetlenia.
@@ -45,6 +60,7 @@ namespace WindowsFormsUI
         private Color currentColor = Color.White;
         private Size prevSize;
         private int[] previousCustomsColorOfColorDialog;
+        private INotificator notificator;
         private ILog log;
 
         /// <summary>
@@ -70,6 +86,7 @@ namespace WindowsFormsUI
                 default:
                     ShowDrawLine(false);
                     log.Write("Obecny layout dla ToolboxForma jest nieznany.", LogMessagesTypes.Detail);
+                    notificator.Notify(new Exception(Factory.GetProgrammerErrorString("Nie rozpoznano layouta w ToolboxForm.", false)));
                     break;
             }
             void ShowDrawLine(bool show)
@@ -90,6 +107,7 @@ namespace WindowsFormsUI
                     log.Write("Obecne narzędnie używane przez ToolboxForm to DrawLine.", LogMessagesTypes.Important);
                     return Tools.DrawLine;
                 default:
+                    notificator.Notify(new Exception(Factory.GetProgrammerErrorString("Nie rozpoznano narzędzia w ToolboxForm.", false)));
                     log.Write("Obecne narzędnie używane przez ToolboxForm nie zostało wykryte więc ustawiono DrawLine.", LogMessagesTypes.Important);
                     return Tools.DrawLine;
             }

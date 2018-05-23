@@ -9,6 +9,8 @@ namespace ProgramGraficznyClasses
 {
     public interface IGraphicEditorStandard
     {
+        event EventHandler GraphicChanged;
+
         void DrawAllAgain();
         void NextState();
         void ReturnState();

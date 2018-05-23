@@ -10,16 +10,23 @@ namespace WindowsFormsUI
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// Punkt wejściowy dla programu.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            // Tworzenie rzeczy z fabryki.
             ILog log = Factory.CreateLog();
+            INotificator notificator = Factory.CreateINotificator();
+
             log.Write("Start programu.", LogMessagesTypes.Important);
+
+            // Wygenerowane przez Visual Studio.
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new StartForm(log));
+
+            // Odpala aplikację.
+            Application.Run(new StartForm(log, notificator));
         }
     }
 }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 
 namespace ProgramGraficznyClasses
 {
-    public interface IPixelArtController : IGraphicEditorStandard
+    public interface INotificator
     {
-        void SetPixel(Color color, int x, int y);
+        void Notify(string message);
+        void Notify(string message, string title);
+        void Notify(Exception error);
     }
 }

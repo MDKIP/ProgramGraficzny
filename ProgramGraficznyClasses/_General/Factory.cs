@@ -12,7 +12,27 @@ namespace ProgramGraficznyClasses
     static public class Factory
     {
         /// <summary>
-        /// Tworzy nowy ILog z użyciem LocalLog.
+        /// Zwraca tekst reprezentujący pojawienie się nowej instancji klasy. Do użycia w ILog.
+        /// </summary>
+        /// <param name="name">Nazwa klasy.</param>
+        /// <returns>Zwraca tekst reprezentujący pojawienie się nowej instancji klasy.</returns>
+        static public string GetNewInstanceCreationString(string name)
+        {
+            return $"Nowa instancja {name} została utworzona pomyślnie.";
+        }
+        /// <summary>
+        /// Zwraca tekst reprezentujący błąd programisty z użyciem informacji o błędzie.
+        /// </summary>
+        /// <param name="info">Informacje o błędzie.</param>
+        /// <param name="applicationExit">Jeżeli true to na końcu tekstu pojawi się inforamcja o zamnknięciu aplikacji.</param>
+        /// <returns>Tekst reprezentujący błąd programisty.</returns>
+        static public string GetProgrammerErrorString(string info, bool applicationExit)
+        {
+            string afterInfo = applicationExit ? "Nastąpi teraz zamknięcie aplikacji. Przepraszamy za utrudnienia." : "";
+            return $"Wystąpił błąd (wina programistów).{Environment.NewLine}INFO: {info}{Environment.NewLine}{afterInfo}";
+        }
+        /// <summary>
+        /// Tworzy nowy ILog.
         /// </summary>
         /// <returns>ILog.</returns>
         static public ILog CreateLog()
@@ -32,6 +52,14 @@ namespace ProgramGraficznyClasses
 
             // Zwracanie nowego ILog.
             return new LocalLog(acceptableTypes, typeBeforeMsg);
+        }
+        /// <summary>
+        /// Tworzy nowy INotificator.
+        /// </summary>
+        /// <returns>iNotificator.</returns>
+        static public INotificator CreateINotificator()
+        {
+            return new MessageBoxNotificator();
         }
     }
 }
