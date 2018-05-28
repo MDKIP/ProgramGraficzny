@@ -41,6 +41,7 @@
             this.pcbImage.Size = new System.Drawing.Size(896, 450);
             this.pcbImage.TabIndex = 0;
             this.pcbImage.TabStop = false;
+            this.pcbImage.Click += new System.EventHandler(this.pcbImage_Click);
             // 
             // PixelArtEditor
             // 

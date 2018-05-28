@@ -42,7 +42,7 @@ namespace WindowsFormsUI
             this.project = project;
             this.log = log;
             bitmap = new Bitmap(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
-            topsPositions = new Point[pixels, pixels];
+            topsPositions = new Point[pixels + 1, pixels + 1];
             colorMap = new int[pixels, pixels];
         }
 
@@ -83,9 +83,9 @@ namespace WindowsFormsUI
             }
 
             // Obliczanie pozycji wierzchołków i zapisywanie tych danych do topsPositions.
-            for (int yPos = 0, npY = 0; npY < pixels; yPos += distance, npY++)
+            for (int yPos = 0, npY = 0; npY < pixels + 1; yPos -+= distance, npY++)
             {
-                for (int xPos = 0, npX = 0; npX < pixels; xPos += distance, npX++)
+                for (int xPos = 0, npX = 0; npX < pixels + 1; xPos += distance, npX++)
                 {
                     topsPositions[npX, npY] = new Point(xPos, yPos);
                 }
@@ -165,14 +165,23 @@ namespace WindowsFormsUI
         }
         private Point GetClickCordinates(Point clickPos)
         {
+            notificator.Notify(clickPos.ToString());
+            //notificator.Notify(topsPositions.Length.ToString());
             for (int yIndex = 0; yIndex < pixels; yIndex++)
             {
                 for (int xIndex = 0; xIndex < pixels; xIndex++)
                 {
-                    
+                    //notificator.Notify($"yIndex: {yIndex}   xIndex: {xIndex}");
+                    notificator.Notify($"current point: {topsPositions[xIndex, yIndex]}{Environment.NewLine}next point: {topsPositions[xIndex + 1, yIndex + 1]}");
+                    if (topsPositions[xIndex, yIndex].IsGratherThen(clickPos) && topsPositions[xIndex + 1, yIndex + 1].IsSmallerThen(clickPos))
+                    {
+                        Point output = new Point(xIndex, yIndex);
+                        notificator.Notify($"OUTPUT: {output}");
+                        return output;
+                    }
                 }
             }
-            throw new NotImplementedException();
+            return new Point(-1, -1);
         }
         // Zaimplementowane z IGraphicEditorStandard.
         public void Clear()
@@ -233,6 +242,13 @@ namespace WindowsFormsUI
             {
                 notificator.Notify(error);
             }
+        }
+        private void pcbImage_Click(object sender, EventArgs e)
+        {
+            int xOfNewClick = MousePosition.X - Location.X - 5;
+            int yOfNewClick = MousePosition.Y - Location.Y - 50;
+            Point locationOfClick = new Point(xOfNewClick, yOfNewClick);
+            notificator.Notify(GetClickCordinates(locationOfClick).ToString());
         }
     }
 }
