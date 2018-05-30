@@ -5,9 +5,3 @@ IMPORTANT: Tworzenie nowego toolboxa który będzie domyślny dla całego progra
 DETAIL: Nowa instancja ToolboxForm została utworzona pomyślnie.
 DETAIL: Obecny layout dla ToolboxForma to DrawLine.
 IMPORTANT: ToolboxForm został załadowany.
-IMPORTANT: Użytkownik chce utworzyć nową grafikę bez projektu.
-DETAIL: Nowa instancja NewGraphicForm została utworzona pomyślnie.
-IMPORTANT: NewGraphicForm został załadowany.
-IMPORTANT: NewGraphicForm layout jest od teraz Empty.
-IMPORTANT: NewGraphicForm layout jest od teraz PixelArt.
-IMPORTANT: Tworznie nowej grafiki.

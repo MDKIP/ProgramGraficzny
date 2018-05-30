@@ -2,7 +2,7 @@
 
 namespace ProgramGraficznyClasses
 {
-    public interface IToolbox
+    public interface IToolbox : ISimpleToolbox
     {
         Pen CurrentPen { get; set; }
         Color CurrentColor { get; set; }

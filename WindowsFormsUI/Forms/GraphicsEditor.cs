@@ -240,12 +240,9 @@ namespace WindowsFormsUI
         }
         private void pcbWorkSpace_Click(object sender, EventArgs e)
         {
-            // Pobieranie lokalizacji kursora (muszę to regulować tymi stałymi z jeszcze nieznanego mi powodu)
-            int x = MousePosition.X - Location.X - 5;
-            int y = MousePosition.Y - Location.Y - 50;
-            Point location = new Point(x, y);
+            MouseEventArgs args = e as MouseEventArgs;
 
-            log.Write($"Pole robocze zostało klinkniętę na pozycji ({location.ToString()}).", LogMessagesTypes.Important);
+            log.Write($"Pole robocze zostało klinkniętę na pozycji ({args.Location}).", LogMessagesTypes.Important);
 
             if (Type == GraphicTypes.Image || Type == GraphicTypes.Empty)
             {
@@ -253,7 +250,7 @@ namespace WindowsFormsUI
                 {
                     case Tools.DrawLine:
                         Graphic.ReturnState();
-                        Graphic.DrawLine(toolbox.CurrentPen, location, new Point(0, 0), false);
+                        Graphic.DrawLine(toolbox.CurrentPen, args.Location, new Point(0, 0), false);
                         break;
                 } 
             }

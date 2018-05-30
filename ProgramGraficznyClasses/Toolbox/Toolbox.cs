@@ -12,6 +12,12 @@ namespace ProgramGraficznyClasses
     /// </summary>
     public class Toolbox : IToolbox
     {
+        // Zaimplementowane z ISimpleToolbox.
+        public Color GetColor()
+        {
+            return CurrentColor;
+        }
+        // Zaimplementowane z IToolbox
         /// <summary>
         /// Obecny pędzel.
         /// </summary>

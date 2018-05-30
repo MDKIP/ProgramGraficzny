@@ -83,7 +83,7 @@ namespace WindowsFormsUI
             }
 
             // Obliczanie pozycji wierzchołków i zapisywanie tych danych do topsPositions.
-            for (int yPos = 0, npY = 0; npY < pixels + 1; yPos -+= distance, npY++)
+            for (int yPos = 0, npY = 0; npY < pixels + 1; yPos += distance, npY++)
             {
                 for (int xPos = 0, npX = 0; npX < pixels + 1; xPos += distance, npX++)
                 {
@@ -144,6 +144,12 @@ namespace WindowsFormsUI
                 }
             }
         }
+        private void PaintPixel(Point coordinates, Color color)
+        {
+            Point topA = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
+            Point topB = topsPositions[coordinates.X + 1, coordinates.Y + 1];
+            DrawSquare(topA, topB, color);
+        }
         private void DrawSquare(Point topA, Point topB, Color color)
         {
             // Dobieranie większych i mniejszych wartości osi X i Y.
@@ -162,22 +168,18 @@ namespace WindowsFormsUI
                     coloredPixels.Add(new Point(x, y));
                 }
             }
+
+            OnGraphicChanged();
         }
         private Point GetClickCordinates(Point clickPos)
         {
-            notificator.Notify(clickPos.ToString());
-            //notificator.Notify(topsPositions.Length.ToString());
             for (int yIndex = 0; yIndex < pixels; yIndex++)
             {
                 for (int xIndex = 0; xIndex < pixels; xIndex++)
                 {
-                    //notificator.Notify($"yIndex: {yIndex}   xIndex: {xIndex}");
-                    notificator.Notify($"current point: {topsPositions[xIndex, yIndex]}{Environment.NewLine}next point: {topsPositions[xIndex + 1, yIndex + 1]}");
-                    if (topsPositions[xIndex, yIndex].IsGratherThen(clickPos) && topsPositions[xIndex + 1, yIndex + 1].IsSmallerThen(clickPos))
+                    if (topsPositions[xIndex, yIndex].IsSmallerThen(clickPos) && topsPositions[xIndex + 1, yIndex + 1].IsGratherThen(clickPos))
                     {
-                        Point output = new Point(xIndex, yIndex);
-                        notificator.Notify($"OUTPUT: {output}");
-                        return output;
+                        return new Point(xIndex, yIndex);
                     }
                 }
             }
@@ -245,10 +247,18 @@ namespace WindowsFormsUI
         }
         private void pcbImage_Click(object sender, EventArgs e)
         {
-            int xOfNewClick = MousePosition.X - Location.X - 5;
-            int yOfNewClick = MousePosition.Y - Location.Y - 50;
-            Point locationOfClick = new Point(xOfNewClick, yOfNewClick);
-            notificator.Notify(GetClickCordinates(locationOfClick).ToString());
+            MouseEventArgs args = e as MouseEventArgs;
+
+            // Pobieranie koordynatów kliknięcia.
+            Point coordinates = GetClickCordinates(args.Location);
+
+            log.Write($"Użytkownik kliknął pcbImage na pozycji {args.Location}. Koordynaty to {coordinates}.");
+
+            // Zamalowywanie piksela.
+            if (coordinates != new Point(-1, -1))
+            {
+                PaintPixel(coordinates, Color.Red); 
+            }
         }
     }
 }
