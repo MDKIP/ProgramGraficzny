@@ -15,3 +15,4 @@ F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\Win
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.ToolboxForm.resources
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.NewGraphicForm.resources
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.PixelArtEditor.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.PixelArtToolboxForm.resources

@@ -13,7 +13,7 @@ namespace WindowsFormsUI
 {
     public partial class PixelArtEditor : Form, IGraphicEditorStandard
     {
-        public PixelArtEditor(int pixels, IProject project, ILog log, INotificator notificator)
+        public PixelArtEditor(int pixels, IPixelArtToolbox toolbox, IProject project, ILog log, INotificator notificator)
         {
             // Wywalanie wyjątków.
             if (log == null && notificator == null)
@@ -32,29 +32,40 @@ namespace WindowsFormsUI
                 log.Write(error.Message);
                 throw error;
             }
+            else if (toolbox == null)
+            {
+                Exception error = new NullReferenceException(Factory.GetProgrammerErrorString("toolbox nie może być pusty.", true));
+                log.Write(error.Message);
+                throw error;
+            }
 
             // Inicjalizacja komponentów.
             InitializeComponent();
 
             // Przypisywanie.
             this.pixels = pixels;
+            this.toolbox = toolbox;
             this.notificator = notificator;
             this.project = project;
             this.log = log;
             bitmap = new Bitmap(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             topsPositions = new Point[pixels + 1, pixels + 1];
-            colorMap = new int[pixels, pixels];
+            colorMap = new Color[pixels, pixels];
         }
 
         public event EventHandler GraphicChanged;
 
         public bool HasProject { get => project != null; }
+        public int RealPixelsPerEditorPixels { get; set; }
 
+        private List<Point> coloredPixelsCoordinates = new List<Point>();
         private List<Point> coloredPixels = new List<Point>();
         private Bitmap bitmap;
         private Point[,] topsPositions;
-        private int[,] colorMap;
+        private Color[,] colorMap;
+        private bool saveOperations = true;
         private int pixels;
+        private IPixelArtToolbox toolbox;
         private INotificator notificator;
         private IProject project;
         private ILog log;
@@ -144,11 +155,28 @@ namespace WindowsFormsUI
                 }
             }
         }
+        private void DrawPixels()
+        {
+            saveOperations = false;
+            foreach (Point pixelCoordiante in coloredPixelsCoordinates)
+            {
+                PaintPixel(pixelCoordiante, colorMap[pixelCoordiante.X, pixelCoordiante.Y]);
+            }
+            saveOperations = true;
+        }
         private void PaintPixel(Point coordinates, Color color)
         {
+            // Malowanie.
             Point topA = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
             Point topB = topsPositions[coordinates.X + 1, coordinates.Y + 1];
             DrawSquare(topA, topB, color);
+
+            // Zapisywanie danych.
+            if (saveOperations)
+            {
+                colorMap[coordinates.X, coordinates.Y] = color;
+                coloredPixelsCoordinates.Add(coordinates); 
+            }
         }
         private void DrawSquare(Point topA, Point topB, Color color)
         {
@@ -210,7 +238,21 @@ namespace WindowsFormsUI
         }
         public void Save(string path)
         {
-            throw new NotImplementedException();
+            if (path.EndsWith(".jpg"))
+            {
+                Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
+                Graphics graphics = Graphics.FromImage(image);
+                for (int y = 0, yIndex = 0; y < RealPixelsPerEditorPixels * pixels; y += RealPixelsPerEditorPixels, yIndex++)
+                {
+                    for (int x = 0, xIndex = 0; x < RealPixelsPerEditorPixels * pixels; x += RealPixelsPerEditorPixels, xIndex++)
+                    {
+                        if (coloredPixelsCoordinates.Contains(new Point(xIndex, yIndex)))
+                        {
+                            
+                        }
+                    }
+                }
+            }
         }
         public Bitmap CreateBitmap()
         {
@@ -239,6 +281,7 @@ namespace WindowsFormsUI
             {
                 Clear();
                 DrawNet();
+                DrawPixels();
             }
             catch (Exception error)
             {
@@ -248,7 +291,6 @@ namespace WindowsFormsUI
         private void pcbImage_Click(object sender, EventArgs e)
         {
             MouseEventArgs args = e as MouseEventArgs;
-
             // Pobieranie koordynatów kliknięcia.
             Point coordinates = GetClickCordinates(args.Location);
 
@@ -257,7 +299,7 @@ namespace WindowsFormsUI
             // Zamalowywanie piksela.
             if (coordinates != new Point(-1, -1))
             {
-                PaintPixel(coordinates, Color.Red); 
+                PaintPixel(coordinates, toolbox.GetColor()); 
             }
         }
     }

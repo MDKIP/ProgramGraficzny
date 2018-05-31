@@ -41,6 +41,9 @@
             this.lblHeightOfSelectedImage = new System.Windows.Forms.Label();
             this.cmbSizeOfPixelArt = new System.Windows.Forms.ComboBox();
             this.lblSizeOfPixelArt = new System.Windows.Forms.Label();
+            this.lblSizePerPixel = new System.Windows.Forms.Label();
+            this.nudSizePerPixel = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSizePerPixel)).BeginInit();
             this.SuspendLayout();
             // 
             // lblGraphicType
@@ -167,17 +170,55 @@
             // lblSizeOfPixelArt
             // 
             this.lblSizeOfPixelArt.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.lblSizeOfPixelArt.Location = new System.Drawing.Point(13, 48);
+            this.lblSizeOfPixelArt.Location = new System.Drawing.Point(16, 48);
             this.lblSizeOfPixelArt.Name = "lblSizeOfPixelArt";
-            this.lblSizeOfPixelArt.Size = new System.Drawing.Size(73, 21);
+            this.lblSizeOfPixelArt.Size = new System.Drawing.Size(70, 21);
             this.lblSizeOfPixelArt.TabIndex = 12;
             this.lblSizeOfPixelArt.Text = "Rozmiar";
+            // 
+            // lblSizePerPixel
+            // 
+            this.lblSizePerPixel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lblSizePerPixel.Location = new System.Drawing.Point(16, 78);
+            this.lblSizePerPixel.Name = "lblSizePerPixel";
+            this.lblSizePerPixel.Size = new System.Drawing.Size(115, 19);
+            this.lblSizePerPixel.TabIndex = 13;
+            this.lblSizePerPixel.Text = "Rozmiar na piksel";
+            // 
+            // nudSizePerPixel
+            // 
+            this.nudSizePerPixel.Increment = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.nudSizePerPixel.Location = new System.Drawing.Point(137, 78);
+            this.nudSizePerPixel.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.nudSizePerPixel.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nudSizePerPixel.Name = "nudSizePerPixel";
+            this.nudSizePerPixel.Size = new System.Drawing.Size(146, 20);
+            this.nudSizePerPixel.TabIndex = 14;
+            this.nudSizePerPixel.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
             // 
             // NewGraphicForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(296, 270);
+            this.Controls.Add(this.nudSizePerPixel);
+            this.Controls.Add(this.lblSizePerPixel);
             this.Controls.Add(this.lblSizeOfPixelArt);
             this.Controls.Add(this.cmbSizeOfPixelArt);
             this.Controls.Add(this.lblHeightOfSelectedImage);
@@ -196,6 +237,7 @@
             this.Name = "NewGraphicForm";
             this.Text = "NewGraphicForm";
             this.Load += new System.EventHandler(this.NewGraphicForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.nudSizePerPixel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -216,5 +258,7 @@
         private System.Windows.Forms.Label lblHeightOfSelectedImage;
         private System.Windows.Forms.ComboBox cmbSizeOfPixelArt;
         private System.Windows.Forms.Label lblSizeOfPixelArt;
+        private System.Windows.Forms.Label lblSizePerPixel;
+        private System.Windows.Forms.NumericUpDown nudSizePerPixel;
     }
 }

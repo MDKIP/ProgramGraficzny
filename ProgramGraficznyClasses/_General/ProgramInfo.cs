@@ -27,5 +27,9 @@ namespace ProgramGraficznyClasses
         /// Domyślny toolbox.
         /// </summary>
         static public IToolbox MainToolbox { get; set; }
+        /// <summary>
+        /// Domyślny toolbox dla PixelArtów.
+        /// </summary>
+        static public IPixelArtToolbox MainPixelArtToolbox { get; set; }
     }
 }

@@ -67,10 +67,12 @@ namespace WindowsFormsUI
                     lblWidthOfSelectedImage.Visible = false;
                     lblHeightOfSelectedImage.Visible = false;
                     lblSizeOfPixelArt.Visible = false;
+                    lblSizePerPixel.Visible = false;
                     txtWidth.Visible = true;
                     txtHeight.Visible = true;
                     btnSelectImage.Visible = false;
                     cmbSizeOfPixelArt.Visible = false;
+                    nudSizePerPixel.Visible = false;
                     log.Write("NewGraphicForm layout jest od teraz Empty.", LogMessagesTypes.Important);
                     break;
                 case GraphicTypes.Image:
@@ -80,10 +82,12 @@ namespace WindowsFormsUI
                     lblWidthOfSelectedImage.Visible = true;
                     lblHeightOfSelectedImage.Visible = true;
                     lblSizeOfPixelArt.Visible = false;
+                    lblSizePerPixel.Visible = false;
                     txtWidth.Visible = false;
                     txtHeight.Visible = false;
                     btnSelectImage.Visible = true;
                     cmbSizeOfPixelArt.Visible = false;
+                    nudSizePerPixel.Visible = false;
                     log.Write("NewGraphicForm layout jest od teraz Image.", LogMessagesTypes.Important);
                     break;
                 case GraphicTypes.PixelArt:
@@ -93,10 +97,12 @@ namespace WindowsFormsUI
                     lblWidthOfSelectedImage.Visible = false;
                     lblHeightOfSelectedImage.Visible = false;
                     lblSizeOfPixelArt.Visible = true;
+                    lblSizePerPixel.Visible = true;
                     txtWidth.Visible = false;
                     txtHeight.Visible = false;
                     btnSelectImage.Visible = false;
                     cmbSizeOfPixelArt.Visible = true;
+                    nudSizePerPixel.Visible = true;
                     log.Write("NewGraphicForm layout jest od teraz PixelArt.", LogMessagesTypes.Important);
                     break;
             }
@@ -155,7 +161,14 @@ namespace WindowsFormsUI
                     break;
                 case GraphicTypes.PixelArt:
                     {
-                        PixelArtEditor editor = new PixelArtEditor(sizeOfPixelArt, project, log, notificator);
+                        if (ProgramInfo.MainPixelArtToolbox == null)
+                        {
+                            PixelArtToolboxForm toolbox = new PixelArtToolboxForm(log, notificator);
+                            ProgramInfo.MainPixelArtToolbox = toolbox;
+                            toolbox.Show();
+                        }
+                        PixelArtEditor editor = new PixelArtEditor(sizeOfPixelArt, ProgramInfo.MainPixelArtToolbox, project, log, notificator);
+                        editor.RealPixelsPerEditorPixels = (int)nudSizePerPixel.Value;
                         editor.Show();
                     }
                     break;
