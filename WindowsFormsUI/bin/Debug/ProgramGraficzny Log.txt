@@ -1,12 +1,29 @@
 IMPORTANT: Start programu.
 DETAIL: Nowa instancja StartForm została utworzona pomyślnie.
 IMPORTANT: StartForm został załadowany.
-IMPORTANT: Tworzenie nowego toolboxa który będzie domyślny dla całego programu.
-DETAIL: Nowa instancja ToolboxForm została utworzona pomyślnie.
-DETAIL: Obecny layout dla ToolboxForma to DrawLine.
-IMPORTANT: ToolboxForm został załadowany.
 IMPORTANT: Użytkownik chce utworzyć nową grafikę bez projektu.
 DETAIL: Nowa instancja NewGraphicForm została utworzona pomyślnie.
 IMPORTANT: NewGraphicForm został załadowany.
 IMPORTANT: NewGraphicForm layout jest od teraz Empty.
 IMPORTANT: NewGraphicForm layout jest od teraz PixelArt.
+IMPORTANT: Tworznie nowej grafiki.
+DETAIL: Nowa instancja PixelArtToolboxForm została utworzona pomyślnie.
+Użytkownik kliknął pcbImage na pozycji {X=175,Y=433}. Koordynaty to {X=6,Y=15}.
+Użytkownik kliknął pcbImage na pozycji {X=179,Y=409}. Koordynaty to {X=6,Y=14}.
+Użytkownik kliknął pcbImage na pozycji {X=181,Y=368}. Koordynaty to {X=6,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=181,Y=376}. Koordynaty to {X=6,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=184,Y=410}. Koordynaty to {X=6,Y=14}.
+Użytkownik kliknął pcbImage na pozycji {X=184,Y=430}. Koordynaty to {X=6,Y=15}.
+Użytkownik kliknął pcbImage na pozycji {X=220,Y=299}. Koordynaty to {X=7,Y=10}.
+Użytkownik kliknął pcbImage na pozycji {X=336,Y=266}. Koordynaty to {X=-1,Y=-1}.
+Użytkownik kliknął pcbImage na pozycji {X=312,Y=324}. Koordynaty to {X=11,Y=11}.
+Użytkownik kliknął pcbImage na pozycji {X=293,Y=331}. Koordynaty to {X=10,Y=11}.
+Użytkownik kliknął pcbImage na pozycji {X=222,Y=360}. Koordynaty to {X=7,Y=12}.
+Użytkownik kliknął pcbImage na pozycji {X=203,Y=367}. Koordynaty to {X=7,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=209,Y=384}. Koordynaty to {X=7,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=249,Y=396}. Koordynaty to {X=8,Y=14}.
+Użytkownik kliknął pcbImage na pozycji {X=269,Y=366}. Koordynaty to {X=9,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=257,Y=336}. Koordynaty to {X=-1,Y=-1}.
+Użytkownik kliknął pcbImage na pozycji {X=255,Y=359}. Koordynaty to {X=9,Y=12}.
+Użytkownik kliknął pcbImage na pozycji {X=258,Y=372}. Koordynaty to {X=9,Y=13}.
+Użytkownik kliknął pcbImage na pozycji {X=265,Y=348}. Koordynaty to {X=9,Y=12}.

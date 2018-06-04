@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Graphics Manipulation\BitmapManipulator.cs" />
     <Compile Include="Graphics Manipulation\EventArgs\GraphicChangedEventArgs.cs" />
+    <Compile Include="Graphics Manipulation\IPixelArtOperation.cs" />
+    <Compile Include="Graphics Manipulation\PixelArtOperation.cs" />
     <Compile Include="Log\LocalLog.cs" />
     <Compile Include="Notifications\INotificator.cs" />
     <Compile Include="Notifications\MessageBoxNotificator.cs" />

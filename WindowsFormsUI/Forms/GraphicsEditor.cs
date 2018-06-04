@@ -280,8 +280,8 @@ namespace WindowsFormsUI
         private void newItem_Click(object sender, EventArgs e)
         {
             log.Write("Użytkownik chce utworzyć nową grafikę.", LogMessagesTypes.Important);
-            NewGraphicForm dialog = new NewGraphicForm(Project, log, notificator);
-            dialog.Show();
+            
+            FormsManager.ShowNewGraphicForm(null);
         }
         private void saveItem_Click(object sender, EventArgs e)
         {

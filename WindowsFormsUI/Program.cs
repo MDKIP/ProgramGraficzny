@@ -17,7 +17,8 @@ namespace WindowsFormsUI
         {
             // Tworzenie rzeczy z fabryki.
             ILog log = Factory.CreateLog();
-            INotificator notificator = Factory.CreateINotificator();
+            FormsManager.StandardLog = log;
+            FormsManager.StandardNotificator = Factory.CreateINotificator();
 
             log.Write("Start programu.", LogMessagesTypes.Important);
 
@@ -26,7 +27,7 @@ namespace WindowsFormsUI
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Odpala aplikację.
-            Application.Run(new StartForm(log, notificator));
+            Application.Run(FormsManager.ShowStartForm());
         }
     }
 }

@@ -56,23 +56,12 @@ namespace WindowsFormsUI
 
             // Ustawianie tekstu w pasku forma.
             Text = $"{ProgramInfo.ProgramName} ({ProgramInfo.Version})";
-
-            // Ustawianie głównego toolboxa programu.
-            if (!ProgramInfo.HasMainToolbox)
-            {
-                log.Write("Tworzenie nowego toolboxa który będzie domyślny dla całego programu.", LogMessagesTypes.Important);
-                ToolboxForm toolbox = new ToolboxForm(log, notificator);
-                toolbox.Show();
-                ProgramInfo.MainToolbox = toolbox.MainToolbox;
-            }
         }
         private void btnCreateGraphics_Click(object sender, EventArgs e)
         {
             log.Write("Użytkownik chce utworzyć nową grafikę bez projektu.", LogMessagesTypes.Important);
 
-            // Pokazywnie nowego forma w którym użytkownik wybierze właściwości nowej grafiki.
-            NewGraphicForm form = new NewGraphicForm(null, log, notificator);
-            form.Show();
+            FormsManager.ShowNewGraphicForm(null);
         }
     }
 }

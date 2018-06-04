@@ -51,6 +51,12 @@ namespace WindowsFormsUI
             bitmap = new Bitmap(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
             topsPositions = new Point[pixels + 1, pixels + 1];
             colorMap = new Color[pixels, pixels];
+
+            // Tworzenie menu.
+            MainMenu menu = new MainMenu();
+            Menu = menu;
+            MenuItem miSave = new MenuItem("Zapisz", miSave_Click);
+            Menu.MenuItems.Add(miSave);
         }
 
         public event EventHandler GraphicChanged;
@@ -176,6 +182,7 @@ namespace WindowsFormsUI
             {
                 colorMap[coordinates.X, coordinates.Y] = color;
                 coloredPixelsCoordinates.Add(coordinates); 
+                
             }
         }
         private void DrawSquare(Point topA, Point topB, Color color)
@@ -213,6 +220,11 @@ namespace WindowsFormsUI
             }
             return new Point(-1, -1);
         }
+        private Color GetColorOfPixel(Point coordinates)
+        {
+            Point p = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
+            return bitmap.GetPixel(p.X, p.Y);
+        }
         // Zaimplementowane z IGraphicEditorStandard.
         public void Clear()
         {
@@ -242,16 +254,19 @@ namespace WindowsFormsUI
             {
                 Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
                 Graphics graphics = Graphics.FromImage(image);
-                for (int y = 0, yIndex = 0; y < RealPixelsPerEditorPixels * pixels; y += RealPixelsPerEditorPixels, yIndex++)
+
+                for (int yIndex = 0, yPos = 0; yIndex < pixels - 1; yIndex++, yPos += RealPixelsPerEditorPixels)
                 {
-                    for (int x = 0, xIndex = 0; x < RealPixelsPerEditorPixels * pixels; x += RealPixelsPerEditorPixels, xIndex++)
+                    for (int xIndex = 0, xPos = 0; xIndex < pixels - 1; xIndex++, xPos += RealPixelsPerEditorPixels)
                     {
-                        if (coloredPixelsCoordinates.Contains(new Point(xIndex, yIndex)))
-                        {
-                            
-                        }
+                        Brush b = new SolidBrush(colorMap[xIndex, yIndex]);
+                        Size s = new Size(RealPixelsPerEditorPixels, RealPixelsPerEditorPixels);
+                        Rectangle r = new Rectangle(new Point(xPos, yPos), s);
+                        graphics.FillRectangle(b, r);
                     }
                 }
+
+                image.Save(path);
             }
         }
         public Bitmap CreateBitmap()
@@ -299,7 +314,22 @@ namespace WindowsFormsUI
             // Zamalowywanie piksela.
             if (coordinates != new Point(-1, -1))
             {
-                PaintPixel(coordinates, toolbox.GetColor()); 
+                if (args.Button == MouseButtons.Left)
+                {
+                    PaintPixel(coordinates, toolbox.GetColor());
+                }
+                else if (args.Button == MouseButtons.Right)
+                {
+                    PaintPixel(coordinates, Color.Empty);
+                }
+            }
+        }
+        private void miSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                Save(dialog.FileName);
             }
         }
     }
