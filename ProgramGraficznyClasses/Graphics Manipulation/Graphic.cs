@@ -269,5 +269,10 @@ namespace ProgramGraficznyClasses
             // Zwracanie gotowej bitmapy.
             return bitmap;
         }
+
+        public void LoadFile(string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 using ProgramGraficznyClasses;
 
 namespace WindowsFormsUI
@@ -55,8 +56,10 @@ namespace WindowsFormsUI
             // Tworzenie menu.
             MainMenu menu = new MainMenu();
             Menu = menu;
-            MenuItem miSave = new MenuItem("Zapisz", miSave_Click);
-            Menu.MenuItems.Add(miSave);
+            MenuItem miFile = new MenuItem("Plik");
+            miFile.MenuItems.Add(new MenuItem("Zapisz", miSave_Click));
+            miFile.MenuItems.Add(new MenuItem("Wczytaj", miLoad_Click));
+            Menu.MenuItems.Add(miFile);
         }
 
         public event EventHandler GraphicChanged;
@@ -66,6 +69,8 @@ namespace WindowsFormsUI
 
         private List<Point> coloredPixelsCoordinates = new List<Point>();
         private List<Point> coloredPixels = new List<Point>();
+        private List<IPixelArtOperation> executedOperations = new List<IPixelArtOperation>();
+        private Stack<IPixelArtOperation> futureOperations = new Stack<IPixelArtOperation>();
         private Bitmap bitmap;
         private Point[,] topsPositions;
         private Color[,] colorMap;
@@ -172,18 +177,19 @@ namespace WindowsFormsUI
         }
         private void PaintPixel(Point coordinates, Color color)
         {
+            // Zapisywanie danych.
+            if (saveOperations)
+            {
+                coloredPixelsCoordinates.Add(coordinates);
+                executedOperations.Add(new PixelArtOperation(coordinates, color, GetColorOfPixel(coordinates)));
+                futureOperations.Clear();
+            }
+
             // Malowanie.
             Point topA = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
             Point topB = topsPositions[coordinates.X + 1, coordinates.Y + 1];
             DrawSquare(topA, topB, color);
-
-            // Zapisywanie danych.
-            if (saveOperations)
-            {
-                colorMap[coordinates.X, coordinates.Y] = color;
-                coloredPixelsCoordinates.Add(coordinates); 
-                
-            }
+            colorMap[coordinates.X, coordinates.Y] = color;
         }
         private void DrawSquare(Point topA, Point topB, Color color)
         {
@@ -242,39 +248,132 @@ namespace WindowsFormsUI
         }
         public void NextState()
         {
-            throw new NotImplementedException();
+            // Zapobieganie błędom.
+            //notificator.Notify(futureOperations.Count.ToString());
+            if (futureOperations.Count == 0) return;
+            
+
+            // Zapisywanie danych.
+            IPixelArtOperation operation = futureOperations.Pop();
+            executedOperations.Add(operation);
+
+            // Zmiany w edytorze.
+            saveOperations = false;
+            PaintPixel(operation.Coordiantes, operation.AfterColor);
+            saveOperations = true;
+            OnGraphicChanged();
         }
         public void ReturnState()
         {
-            throw new NotImplementedException();
+            // Przypisywanie zmiennych i zapobieganie błędom.
+            int lastIndex = executedOperations.Count - 1;
+            if (lastIndex < 0) return;
+            //notificator.Notify(futureOperations.Count.ToString());
+
+            // Zapisywanie danych.
+            IPixelArtOperation operation = executedOperations[lastIndex];
+            executedOperations.RemoveAt(lastIndex);
+            futureOperations.Push(operation);
+
+            // Zmiany w edytorze.
+            saveOperations = false;
+            PaintPixel(operation.Coordiantes, operation.BeforeColor);
+            saveOperations = true;
+            OnGraphicChanged();
         }
         public void Save(string path)
         {
             if (path.EndsWith(".jpg"))
             {
-                Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
-                Graphics graphics = Graphics.FromImage(image);
+                CreateBitmap().Save(path);
+            }
+            else if (path.EndsWith(".pgpa"))
+            {
+                List<string> lines = new List<string>();
 
-                for (int yIndex = 0, yPos = 0; yIndex < pixels - 1; yIndex++, yPos += RealPixelsPerEditorPixels)
+                for (int y = 0; y < pixels; y++)
                 {
-                    for (int xIndex = 0, xPos = 0; xIndex < pixels - 1; xIndex++, xPos += RealPixelsPerEditorPixels)
+                    string line = "";
+
+                    for (int x = 0; x < pixels; x++)
                     {
-                        Brush b = new SolidBrush(colorMap[xIndex, yIndex]);
-                        Size s = new Size(RealPixelsPerEditorPixels, RealPixelsPerEditorPixels);
-                        Rectangle r = new Rectangle(new Point(xPos, yPos), s);
-                        graphics.FillRectangle(b, r);
+                        if (x != 0)
+                        {
+                            line += "@" + ColorAsString(colorMap[x, y]); 
+                        }
+                        else
+                        {
+                            line += ColorAsString(colorMap[x, y]);
+                        }
                     }
+
+                    lines.Add(line);
                 }
 
-                image.Save(path);
+                File.AppendAllLines(path, lines);
+            }
+
+            string ColorAsString(Color c)
+            {
+                return $"{c.A}|{c.R}|{c.G}|{c.B}";
+            }
+        }
+        public void LoadFile(string path)
+        {
+            if (path.EndsWith(".pgpa"))
+            {
+                string[] lines = File.ReadAllLines(path);
+                pixels = lines.Length;
+                int x = 0, y = 0;
+                colorMap = new Color[pixels, pixels];
+                topsPositions = new Point[pixels + 1, pixels + 1];
+
+                foreach (string line in lines)
+                {
+                    //notificator.Notify("d");
+                    string[] colors = line.Split('@');
+
+                    foreach (string color in colors)
+                    {
+                        string[] colorData = color.Split('|');
+                        colorMap[x, y] = Color.FromArgb(int.Parse(colorData[0]), int.Parse(colorData[1]), int.Parse(colorData[2]), int.Parse(colorData[3]));
+                        if (!colorMap[x, y].IsEmpty)
+                        {
+                            coloredPixelsCoordinates.Add(new Point(x, y));
+                        }
+
+                        x++;
+                    }
+                    x = 0;
+                    y++;
+                }
+
+                Clear();
+                DrawNet();
+                DrawPixels();
+                OnGraphicChanged();
             }
         }
         public Bitmap CreateBitmap()
         {
-            return bitmap;
+            Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
+            Graphics graphics = Graphics.FromImage(image);
+
+            for (int yIndex = 0, yPos = 0; yIndex < pixels - 1; yIndex++, yPos += RealPixelsPerEditorPixels)
+            {
+                for (int xIndex = 0, xPos = 0; xIndex < pixels - 1; xIndex++, xPos += RealPixelsPerEditorPixels)
+                {
+                    Brush b = new SolidBrush(colorMap[xIndex, yIndex]);
+                    Size s = new Size(RealPixelsPerEditorPixels, RealPixelsPerEditorPixels);
+                    Rectangle r = new Rectangle(new Point(xPos, yPos), s);
+                    graphics.FillRectangle(b, r);
+                }
+            }
+
+            return image;
         }
         // Do eventów.
-        private void OnGraphicChanged()
+        protected void OnGraphicChanged()
         {
             if (GraphicChanged != null)
             {
@@ -303,6 +402,20 @@ namespace WindowsFormsUI
                 notificator.Notify(error);
             }
         }
+        private void PixelArtEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control)
+            {
+                if (e.KeyCode == Keys.Z)
+                {
+                    ReturnState();
+                }
+                else if (e.KeyCode == Keys.X)
+                {
+                    NextState();
+                }
+            }
+        }
         private void pcbImage_Click(object sender, EventArgs e)
         {
             MouseEventArgs args = e as MouseEventArgs;
@@ -327,9 +440,19 @@ namespace WindowsFormsUI
         private void miSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Program Graficzny Piksel Art (*.pgpa) |.pgpa|JPG files (*.jpg) |.jpg";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Save(dialog.FileName);
+            }
+        }
+        private void miLoad_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            //dialog.Filter = "Program Graficzny Piksel Art (*.pgpa) |.pgpa";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                LoadFile(dialog.FileName);
             }
         }
     }

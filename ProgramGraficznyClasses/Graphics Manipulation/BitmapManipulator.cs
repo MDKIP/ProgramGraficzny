@@ -66,5 +66,10 @@ namespace ProgramGraficznyClasses
         {
             GraphicChanged(this, new GraphicChangedEventArgs(bitmap));
         }
+
+        public void LoadFile(string path)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

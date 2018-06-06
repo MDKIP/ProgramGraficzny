@@ -16,6 +16,7 @@ namespace ProgramGraficznyClasses
         void ReturnState();
         void Clear();
         void Save(string path);
+        void LoadFile(string path);
         Bitmap CreateBitmap();
     }
 }

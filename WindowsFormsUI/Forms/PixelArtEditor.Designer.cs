@@ -53,6 +53,7 @@
             this.Text = "PixelArtEditor";
             this.Load += new System.EventHandler(this.PixelArtEditor_Load);
             this.ResizeEnd += new System.EventHandler(this.PixelArtEditor_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PixelArtEditor_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pcbImage)).EndInit();
             this.ResumeLayout(false);
 
