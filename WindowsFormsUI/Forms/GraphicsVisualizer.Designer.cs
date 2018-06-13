@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsUI
 {
-    partial class PixelArtToolboxForm
+    partial class GraphicsVisualizer
     {
         /// <summary>
         /// Required designer variable.
@@ -28,36 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnAddColor = new System.Windows.Forms.Button();
+            this.pcbGraphic = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pcbGraphic)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnAddColor
+            // pcbGraphic
             // 
-            this.btnAddColor.BackColor = System.Drawing.SystemColors.Control;
-            this.btnAddColor.Location = new System.Drawing.Point(12, 12);
-            this.btnAddColor.Name = "btnAddColor";
-            this.btnAddColor.Size = new System.Drawing.Size(241, 23);
-            this.btnAddColor.TabIndex = 0;
-            this.btnAddColor.Text = "Dodaj Kolor";
-            this.btnAddColor.UseVisualStyleBackColor = false;
-            this.btnAddColor.Click += new System.EventHandler(this.btnAddColor_Click);
+            this.pcbGraphic.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pcbGraphic.Location = new System.Drawing.Point(0, 0);
+            this.pcbGraphic.Name = "pcbGraphic";
+            this.pcbGraphic.Size = new System.Drawing.Size(800, 450);
+            this.pcbGraphic.TabIndex = 0;
+            this.pcbGraphic.TabStop = false;
             // 
-            // PixelArtToolboxForm
+            // GraphicsVisualizer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(265, 649);
-            this.Controls.Add(this.btnAddColor);
-            this.MaximumSize = new System.Drawing.Size(281, 1000);
-            this.MinimumSize = new System.Drawing.Size(281, 100);
-            this.Name = "PixelArtToolboxForm";
-            this.Text = "Pixel Art Toolbox";
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pcbGraphic);
+            this.Name = "GraphicsVisualizer";
+            this.Text = "Wizualizator";
+            this.Load += new System.EventHandler(this.GraphicsVisualizer_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pcbGraphic)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btnAddColor;
+        private System.Windows.Forms.PictureBox pcbGraphic;
     }
 }

@@ -30,6 +30,8 @@
         {
             this.lblName = new System.Windows.Forms.Label();
             this.btnCreateGraphics = new System.Windows.Forms.Button();
+            this.btnLoadGraphic = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblName
@@ -54,11 +56,35 @@
             this.btnCreateGraphics.UseVisualStyleBackColor = true;
             this.btnCreateGraphics.Click += new System.EventHandler(this.btnCreateGraphics_Click);
             // 
+            // btnLoadGraphic
+            // 
+            this.btnLoadGraphic.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnLoadGraphic.Location = new System.Drawing.Point(46, 141);
+            this.btnLoadGraphic.Name = "btnLoadGraphic";
+            this.btnLoadGraphic.Size = new System.Drawing.Size(300, 35);
+            this.btnLoadGraphic.TabIndex = 2;
+            this.btnLoadGraphic.Text = "Wczytaj Grafikę";
+            this.btnLoadGraphic.UseVisualStyleBackColor = true;
+            this.btnLoadGraphic.Click += new System.EventHandler(this.btnLoadGraphic_Click);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btnSettings.Location = new System.Drawing.Point(46, 182);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(300, 35);
+            this.btnSettings.TabIndex = 3;
+            this.btnSettings.Text = "Ustawienia";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // StartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 461);
+            this.Controls.Add(this.btnSettings);
+            this.Controls.Add(this.btnLoadGraphic);
             this.Controls.Add(this.btnCreateGraphics);
             this.Controls.Add(this.lblName);
             this.MaximumSize = new System.Drawing.Size(400, 500);
@@ -74,5 +100,7 @@
 
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.Button btnCreateGraphics;
+        private System.Windows.Forms.Button btnLoadGraphic;
+        private System.Windows.Forms.Button btnSettings;
     }
 }

@@ -49,6 +49,7 @@
     <Compile Include="Log\LocalLog.cs" />
     <Compile Include="Notifications\INotificator.cs" />
     <Compile Include="Notifications\MessageBoxNotificator.cs" />
+    <Compile Include="Settings\SettingsInfo.cs" />
     <Compile Include="Toolbox\IPixelArtToolbox.cs" />
     <Compile Include="Toolbox\ISimpleToolbox.cs" />
     <Compile Include="_General\Factory.cs" />

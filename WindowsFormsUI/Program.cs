@@ -19,6 +19,7 @@ namespace WindowsFormsUI
             ILog log = Factory.CreateLog();
             FormsManager.StandardLog = log;
             FormsManager.StandardNotificator = Factory.CreateINotificator();
+            ProgramInfo.MainSettings = Factory.GetSettings();
 
             log.Write("Start programu.", LogMessagesTypes.Important);
 

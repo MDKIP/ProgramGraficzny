@@ -57,9 +57,12 @@ namespace WindowsFormsUI
             MainMenu menu = new MainMenu();
             Menu = menu;
             MenuItem miFile = new MenuItem("Plik");
+            miFile.MenuItems.Add(new MenuItem("Nowy", miNew_Click));
             miFile.MenuItems.Add(new MenuItem("Zapisz", miSave_Click));
             miFile.MenuItems.Add(new MenuItem("Wczytaj", miLoad_Click));
+            MenuItem miSettings = new MenuItem("Ustawienia", miSettings_Click);
             Menu.MenuItems.Add(miFile);
+            Menu.MenuItems.Add(miSettings);
         }
 
         public event EventHandler GraphicChanged;
@@ -310,7 +313,7 @@ namespace WindowsFormsUI
                     lines.Add(line);
                 }
 
-                File.AppendAllLines(path, lines);
+                File.WriteAllLines(path, lines);
             }
 
             string ColorAsString(Color c)
@@ -359,9 +362,9 @@ namespace WindowsFormsUI
             Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
             Graphics graphics = Graphics.FromImage(image);
 
-            for (int yIndex = 0, yPos = 0; yIndex < pixels - 1; yIndex++, yPos += RealPixelsPerEditorPixels)
+            for (int yIndex = 0, yPos = 0; yIndex < pixels; yIndex++, yPos += RealPixelsPerEditorPixels)
             {
-                for (int xIndex = 0, xPos = 0; xIndex < pixels - 1; xIndex++, xPos += RealPixelsPerEditorPixels)
+                for (int xIndex = 0, xPos = 0; xIndex < pixels; xIndex++, xPos += RealPixelsPerEditorPixels)
                 {
                     Brush b = new SolidBrush(colorMap[xIndex, yIndex]);
                     Size s = new Size(RealPixelsPerEditorPixels, RealPixelsPerEditorPixels);
@@ -406,13 +409,24 @@ namespace WindowsFormsUI
         {
             if (e.Control)
             {
-                if (e.KeyCode == Keys.Z)
+               
+                switch (e.KeyCode)
                 {
-                    ReturnState();
-                }
-                else if (e.KeyCode == Keys.X)
-                {
-                    NextState();
+                    case Keys.Z:
+                        {
+                            ReturnState();
+                        }
+                        break;
+                    case Keys.X:
+                        {
+                            NextState();
+                        }
+                        break;
+                    case Keys.S:
+                        {
+                            FormsManager.ShowGraphicsVisualizer(CreateBitmap());
+                        }
+                        break;
                 }
             }
         }
@@ -437,6 +451,10 @@ namespace WindowsFormsUI
                 }
             }
         }
+        private void miSettings_Click(object sneder, EventArgs e)
+        {
+
+        }
         private void miSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
@@ -454,6 +472,10 @@ namespace WindowsFormsUI
             {
                 LoadFile(dialog.FileName);
             }
+        }
+        private void miNew_Click(object sender, EventArgs e)
+        {
+            FormsManager.ShowNewGraphicForm(null);
         }
     }
 }

@@ -51,9 +51,8 @@ namespace WindowsFormsUI
         private INotificator notificator;
         private ILog log;
 
-        private void SelectButton(Button colorButton)
+        private void DeselectAll()
         {
-            // Odznaczanie reszty.
             Button lastButton = new Button();
             bool isStart = true;
             foreach (Button btn in colorButtons)
@@ -71,6 +70,11 @@ namespace WindowsFormsUI
                 }
                 lastButton = btn;
             }
+        }
+        private void SelectButton(Button colorButton)
+        {
+            // Odznaczanie reszty.
+            DeselectAll();
 
             // Zaznaczanie przycisku.
             colorButton.Width += 6;
@@ -78,6 +82,20 @@ namespace WindowsFormsUI
             colorButton.Location = new Point(colorButton.Location.X - 3, colorButton.Location.Y - 3);
             selectedButtonIndex = colorButtons.IndexOf(colorButton);
             selectedColor = colorButton.BackColor;
+        }
+        private void DeleteButton(Button colorButton)
+        {
+            int indexOfButtonToDelete = colorButtons.FindIndex(x => x == colorButton);
+
+            colorButtons.Remove(colorButton);
+            Controls.Remove(colorButton);
+            colorButton.Dispose();
+
+            DeselectAll();
+
+            btnAddColor.Location = new Point(btnAddColor.Location.X, btnAddColor.Location.Y - 30);
+
+            selectedColor = Color.Empty;
         }
         // Zaimplementowane z ISimpleToolbox.
         public Color GetColor()
@@ -114,15 +132,24 @@ namespace WindowsFormsUI
                     newButton.Location = new Point(12, 12);
                 }
                 btnAddColor.Location = new Point(newButton.Location.X, newButton.Location.Y + 30);
-                newButton.Click += ColorButton_Click;
+                newButton.MouseDown += ColorButton_MouseDown;
                 colorButtons.Add(newButton);
                 Controls.Add(newButton);
                 SelectButton(newButton);
             }
         }
-        private void ColorButton_Click(object sender, EventArgs e)
+        private void ColorButton_MouseDown(object sender, EventArgs e)
         {
-            SelectButton(sender as Button);
+            MouseEventArgs args = e as MouseEventArgs;
+
+            if (args.Button == MouseButtons.Left)
+            {
+                SelectButton(sender as Button);
+            }
+            else if (args.Button == MouseButtons.Right)
+            {
+                DeleteButton(sender as Button);
+            }
         }
     }
 }

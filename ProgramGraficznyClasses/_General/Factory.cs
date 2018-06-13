@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace ProgramGraficznyClasses
 {
@@ -11,6 +12,14 @@ namespace ProgramGraficznyClasses
     /// </summary>
     static public class Factory
     {
+        static public SettingsInfo GetSettings()
+        {
+            return new SettingsInfo()
+            {
+                StandardRPPEP = 50,
+                VisualizerBackgroundColor = Color.White,
+            };
+        }
         /// <summary>
         /// Zwraca tekst reprezentujący pojawienie się nowej instancji klasy. Do użycia w ILog.
         /// </summary>

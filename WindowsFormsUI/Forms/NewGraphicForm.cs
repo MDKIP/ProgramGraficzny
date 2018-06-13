@@ -43,6 +43,9 @@ namespace WindowsFormsUI
 
             // Inicjalizacja komponentów.
             InitializeComponent();
+
+            // Dopadsowywanie się do ustawień użytkownika.
+            nudSizePerPixel.Value = ProgramInfo.MainSettings.StandardRPPEP;
         }
 
         private Image imgForImgTypeProject;

@@ -72,6 +72,26 @@ namespace WindowsFormsUI
             form.RealPixelsPerEditorPixels = realPixelsPerPixel;
             return form;
         }
+        static public GraphicsVisualizer ShowGraphicsVisualizer(Image graphic)
+        {
+            return ShowGraphicsVisualizer(graphic, StandardLog, StandardNotificator);
+        }
+        static public GraphicsVisualizer ShowGraphicsVisualizer(Image graphic, ILog log, INotificator notificator)
+        {
+            GraphicsVisualizer form = new GraphicsVisualizer(graphic, log, notificator);
+            form.Show();
+            return form;
+        }
+        static public SettingsForm ShowSettingsForm()
+        {
+            return ShowSettingsForm(StandardLog, StandardNotificator);
+        }
+        static public SettingsForm ShowSettingsForm(ILog log, INotificator notificator)
+        {
+            SettingsForm form = new SettingsForm(log, notificator);
+            form.Show();
+            return form;
+        }
         static public ToolboxForm GetToolboxForm()
         {
             return GetToolboxForm(StandardLog, StandardNotificator);
@@ -82,6 +102,7 @@ namespace WindowsFormsUI
             {
                 toolboxForm = new ToolboxForm(log, notificator);
                 toolboxForm.Show();
+                toolboxForm.FormClosed += ToolboxForm_FormClosed;
                 openForms.Add(toolboxForm);
             }
             return toolboxForm;
@@ -96,9 +117,19 @@ namespace WindowsFormsUI
             {
                 pixelArtToolboxForm = new PixelArtToolboxForm(log, notificator);
                 pixelArtToolboxForm.Show();
+                pixelArtToolboxForm.FormClosed += PixelArtToolboxForm_FormClosed;
                 openForms.Add(pixelArtToolboxForm);
             }
             return pixelArtToolboxForm;
+        }
+
+        static private void ToolboxForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            toolboxForm = null;
+        }
+        static private void PixelArtToolboxForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            pixelArtToolboxForm = null;
         }
     }
 }

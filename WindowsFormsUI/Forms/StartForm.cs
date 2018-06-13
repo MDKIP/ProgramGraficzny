@@ -63,5 +63,26 @@ namespace WindowsFormsUI
 
             FormsManager.ShowNewGraphicForm(null);
         }
+        private void btnLoadGraphic_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            //dialog.Filter = "Program Graficzny Piksel Art (*.pgpa) |.pgpa";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                if (dialog.FileName.EndsWith(".pgpa"))
+                {
+                    FormsManager.ShowPixelArtEditor(32, 50, null).LoadFile(dialog.FileName);
+                }
+                else
+                {
+                    notificator.Notify((new Exception("Plik z którego próbujesz wczytać grafikę ma nieprawidołowy format. Dostępne formaty to .pgpa")));
+                }
+            }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            FormsManager.ShowSettingsForm();
+        }
     }
 }

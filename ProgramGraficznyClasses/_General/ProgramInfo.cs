@@ -11,6 +11,7 @@ namespace ProgramGraficznyClasses
     /// </summary>
     static public class ProgramInfo
     {
+        static public SettingsInfo MainSettings { get; set; }
         /// <summary>
         /// Czy program posiada domyślny toolbox.
         /// </summary>
