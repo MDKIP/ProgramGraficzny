@@ -11,26 +11,10 @@ namespace ProgramGraficznyClasses
     /// </summary>
     static public class ProgramInfo
     {
+        static public EditorTheme CurrentTheme { get; set; }
         static public SettingsInfo MainSettings { get; set; }
-        /// <summary>
-        /// Czy program posiada domyślny toolbox.
-        /// </summary>
-        static public bool HasMainToolbox { get => (MainToolbox != null); }
-        /// <summary>
-        /// Nazwa programu.
-        /// </summary>
         static public string ProgramName { get; } = "Program Graficzny";
-        /// <summary>
-        /// Wersja programu.
-        /// </summary>
         static public string Version { get; } = "Alpha 0.1";
-        /// <summary>
-        /// Domyślny toolbox.
-        /// </summary>
-        static public IToolbox MainToolbox { get; set; }
-        /// <summary>
-        /// Domyślny toolbox dla PixelArtów.
-        /// </summary>
-        static public IPixelArtToolbox MainPixelArtToolbox { get; set; }
+        static public IThemesController MainThemesController { get; set; }
     }
 }

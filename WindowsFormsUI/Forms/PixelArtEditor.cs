@@ -302,11 +302,11 @@ namespace WindowsFormsUI
                     {
                         if (x != 0)
                         {
-                            line += "@" + ColorAsString(colorMap[x, y]); 
+                            line += "@" + colorMap[x, y].ToArgb(); 
                         }
                         else
                         {
-                            line += ColorAsString(colorMap[x, y]);
+                            line += colorMap[x, y].ToArgb();
                         }
                     }
 
@@ -314,11 +314,6 @@ namespace WindowsFormsUI
                 }
 
                 File.WriteAllLines(path, lines);
-            }
-
-            string ColorAsString(Color c)
-            {
-                return $"{c.A}|{c.R}|{c.G}|{c.B}";
             }
         }
         public void LoadFile(string path)
@@ -338,8 +333,7 @@ namespace WindowsFormsUI
 
                     foreach (string color in colors)
                     {
-                        string[] colorData = color.Split('|');
-                        colorMap[x, y] = Color.FromArgb(int.Parse(colorData[0]), int.Parse(colorData[1]), int.Parse(colorData[2]), int.Parse(colorData[3]));
+                        colorMap[x, y] = Color.FromArgb(int.Parse(color));
                         if (!colorMap[x, y].IsEmpty)
                         {
                             coloredPixelsCoordinates.Add(new Point(x, y));

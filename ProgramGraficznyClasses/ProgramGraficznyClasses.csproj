@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\EditorTheme.cs" />
+    <Compile Include="Editor\IThemesController.cs" />
+    <Compile Include="Editor\ThemesManager.cs" />
     <Compile Include="Graphics Manipulation\BitmapManipulator.cs" />
     <Compile Include="Graphics Manipulation\EventArgs\GraphicChangedEventArgs.cs" />
     <Compile Include="Graphics Manipulation\IPixelArtOperation.cs" />

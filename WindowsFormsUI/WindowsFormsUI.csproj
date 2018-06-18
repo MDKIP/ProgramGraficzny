@@ -95,6 +95,7 @@
     <Compile Include="Forms\ToolboxForm.Designer.cs">
       <DependentUpon>ToolboxForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="IProgramGraficznyForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\GraphicsEditor.resx">

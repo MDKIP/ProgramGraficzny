@@ -18,6 +18,16 @@ namespace WindowsFormsUI
         static private PixelArtToolboxForm pixelArtToolboxForm;
         static private ToolboxForm toolboxForm;
 
+        static public void ReloadAllForms()
+        {
+            foreach (Form form in openForms)
+            {
+                if (form is IProgramGraficznyForm controller)
+                {
+                    controller.Reload();
+                }
+            }
+        }
         static public StartForm ShowStartForm()
         {
             return ShowStartForm(StandardLog, StandardNotificator);

@@ -20,6 +20,8 @@ namespace WindowsFormsUI
             FormsManager.StandardLog = log;
             FormsManager.StandardNotificator = Factory.CreateINotificator();
             ProgramInfo.MainSettings = Factory.GetSettings();
+            ProgramInfo.MainThemesController = Factory.CreateIThemesController();
+            ProgramInfo.CurrentTheme = ProgramInfo.MainThemesController.GetTheme("Standard");
 
             log.Write("Start programu.", LogMessagesTypes.Important);
 

@@ -70,5 +70,14 @@ namespace ProgramGraficznyClasses
         {
             return new MessageBoxNotificator();
         }
+        static public IThemesController CreateIThemesController()
+        {
+            IThemesController output = new ThemesManager();
+
+            output.LoadThemes("Themes");
+            output.AddTheme(new EditorTheme("Standard", Color.FromKnownColor(KnownColor.Control), Color.FromKnownColor(KnownColor.Control), Color.Black));
+
+            return output;
+        }
     }
 }
