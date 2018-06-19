@@ -11,7 +11,7 @@ using ProgramGraficznyClasses;
 
 namespace WindowsFormsUI
 {
-    public partial class StartForm : Form
+    public partial class StartForm : Form, IProgramGraficznyForm
     {
         /// <summary>
         /// Standardowy konstruktor dla StartForm.
@@ -45,10 +45,25 @@ namespace WindowsFormsUI
 
             // Inicjalizacja komponentów.
             InitializeComponent();
+            Reload();
         }
 
         private INotificator notificator;
         private ILog log;
+
+        // Zaimplementowane z IProgramGraficznyForm
+        public void Reload()
+        {
+            BackColor = ProgramInfo.CurrentTheme.BackgroundColor;
+            ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblName.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnCreateGraphics.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnCreateGraphics.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnLoadGraphic.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnLoadGraphic.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnSettings.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnSettings.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+        }
 
         private void StartForm_Load(object sender, EventArgs e)
         {
@@ -79,7 +94,6 @@ namespace WindowsFormsUI
                 }
             }
         }
-
         private void btnSettings_Click(object sender, EventArgs e)
         {
             FormsManager.ShowSettingsForm();

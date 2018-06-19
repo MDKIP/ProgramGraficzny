@@ -30,15 +30,19 @@ namespace ProgramGraficznyClasses
         static public EditorTheme FromString(string s)
         {
             string[] parts = s.Split('|');
-            int backgroundColor = 0, buttonsColor = 0, textColor = 0;
+            int backgroundColorAsInt = 0, buttonsColorAsInt = 0, textColorAsInt = 0;
 
-            if (!(int.TryParse(parts[1], out backgroundColor) && int.TryParse(parts[2], out buttonsColor) && 
-                int.TryParse(parts[2], out textColor)))
+            if (!(int.TryParse(parts[1], out backgroundColorAsInt) && int.TryParse(parts[2], out buttonsColorAsInt) && 
+                int.TryParse(parts[3], out textColorAsInt)))
             {
                 return null;
             }
 
-            return new EditorTheme(parts[0], Color.FromArgb(backgroundColor), Color.FromArgb(buttonsColor), Color.FromArgb(textColor));
+            Color backgroundColor = Color.FromArgb(backgroundColorAsInt).GetWithAlpha(255);
+            Color buttonsColor = Color.FromArgb(buttonsColorAsInt).GetWithAlpha(255);
+            Color textColor = Color.FromArgb(textColorAsInt).GetWithAlpha(255);
+
+            return new EditorTheme(parts[0], backgroundColor, buttonsColor, textColor);
         }
     }
 }

@@ -12,7 +12,7 @@ using ProgramGraficznyClasses;
 
 namespace WindowsFormsUI
 {
-    public partial class PixelArtToolboxForm : Form, IPixelArtToolbox
+    public partial class PixelArtToolboxForm : Form, IPixelArtToolbox, IProgramGraficznyForm
     {
         public PixelArtToolboxForm(ILog log, INotificator notificator)
         {
@@ -42,6 +42,8 @@ namespace WindowsFormsUI
             // Przypisywanie.
             this.notificator = notificator;
             this.log = log;
+
+            Reload();
         }
 
         private List<Button> colorButtons = new List<Button>();
@@ -101,6 +103,14 @@ namespace WindowsFormsUI
         public Color GetColor()
         {
             return selectedColor;
+        }
+        // Zaimplementowane z IProgramGraficznyForm
+        public void Reload()
+        {
+            BackColor = ProgramInfo.CurrentTheme.BackgroundColor;
+            ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnAddColor.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnAddColor.ForeColor = ProgramInfo.CurrentTheme.TextColor;
         }
 
         private void btnAddColor_Click(object sender, EventArgs e)

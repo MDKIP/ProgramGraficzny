@@ -12,7 +12,7 @@ using ProgramGraficznyClasses;
 
 namespace WindowsFormsUI
 {
-    public partial class NewGraphicForm : Form
+    public partial class NewGraphicForm : Form, IProgramGraficznyForm
     {
         public NewGraphicForm(IProject project, ILog log, INotificator notificator)
         {
@@ -46,6 +46,8 @@ namespace WindowsFormsUI
 
             // Dopadsowywanie się do ustawień użytkownika.
             nudSizePerPixel.Value = ProgramInfo.MainSettings.StandardRPPEP;
+
+            Reload();
         }
 
         private Image imgForImgTypeProject;
@@ -109,6 +111,34 @@ namespace WindowsFormsUI
                     log.Write("NewGraphicForm layout jest od teraz PixelArt.", LogMessagesTypes.Important);
                     break;
             }
+        }
+        // Zaimplementowane z IProgramGraficznyForm
+        public void Reload()
+        {
+            BackColor = ProgramInfo.CurrentTheme.BackgroundColor;
+            ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblGraphicType.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblHeight.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblHeightOfSelectedImage.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblPathToImage.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblSizeOfPixelArt.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblSizePerPixel.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblWidth.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            lblWidthOfSelectedImage.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnCreate.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnCreate.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnSelectImage.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            btnSelectImage.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            nudSizePerPixel.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            nudSizePerPixel.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            cmbGraphicType.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            cmbGraphicType.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            cmbSizeOfPixelArt.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            cmbSizeOfPixelArt.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            txtHeight.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            txtHeight.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            txtWidth.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+            txtWidth.ForeColor = ProgramInfo.CurrentTheme.TextColor;
         }
 
         private void NewGraphicForm_Load(object sender, EventArgs e)

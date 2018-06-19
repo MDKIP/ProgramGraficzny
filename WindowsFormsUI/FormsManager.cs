@@ -36,6 +36,7 @@ namespace WindowsFormsUI
         {
             StartForm form = new StartForm(log, notificator);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
             openForms.Add(form);
             return form;
         }
@@ -47,6 +48,7 @@ namespace WindowsFormsUI
         {
             NewGraphicForm form = new NewGraphicForm(project, log, notificator);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
             openForms.Add(form);
             return form;
         }
@@ -62,6 +64,7 @@ namespace WindowsFormsUI
         {
             GraphicsEditor form = new GraphicsEditor(project, toolbox, type, log, notificator, plusParams);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
             openForms.Add(form);
             form.SetWorkSpaceSize(size);
             return form;
@@ -78,6 +81,7 @@ namespace WindowsFormsUI
         {
             PixelArtEditor form = new PixelArtEditor(pixels, toolbox, project, log, notificator);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
             openForms.Add(form);
             form.RealPixelsPerEditorPixels = realPixelsPerPixel;
             return form;
@@ -90,6 +94,8 @@ namespace WindowsFormsUI
         {
             GraphicsVisualizer form = new GraphicsVisualizer(graphic, log, notificator);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
+            openForms.Add(form);
             return form;
         }
         static public SettingsForm ShowSettingsForm()
@@ -100,6 +106,8 @@ namespace WindowsFormsUI
         {
             SettingsForm form = new SettingsForm(log, notificator);
             form.Show();
+            form.FormClosed += OpenForm_FormClosed;
+            openForms.Add(form);
             return form;
         }
         static public ToolboxForm GetToolboxForm()
@@ -133,13 +141,19 @@ namespace WindowsFormsUI
             return pixelArtToolboxForm;
         }
 
+        static private void OpenForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            openForms.Remove(sender as Form);
+        }
         static private void ToolboxForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             toolboxForm = null;
+            OpenForm_FormClosed(sender, e);
         }
         static private void PixelArtToolboxForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             pixelArtToolboxForm = null;
+            OpenForm_FormClosed(sender, e);
         }
     }
 }

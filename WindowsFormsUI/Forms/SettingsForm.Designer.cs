@@ -128,7 +128,6 @@
             0,
             0,
             0});
-            this.nudRealPixelsPerEditorPixels.ValueChanged += new System.EventHandler(this.nudRealPixelsPerEditorPixels_ValueChanged);
             // 
             // lblEditor
             // 
