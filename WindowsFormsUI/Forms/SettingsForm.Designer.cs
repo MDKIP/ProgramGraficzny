@@ -74,7 +74,7 @@
             // 
             this.btnSaveChanges.BackColor = System.Drawing.SystemColors.Control;
             this.btnSaveChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.btnSaveChanges.Location = new System.Drawing.Point(159, 394);
+            this.btnSaveChanges.Location = new System.Drawing.Point(159, 298);
             this.btnSaveChanges.Name = "btnSaveChanges";
             this.btnSaveChanges.Size = new System.Drawing.Size(140, 33);
             this.btnSaveChanges.TabIndex = 3;
@@ -156,13 +156,12 @@
             this.cmbThemes.Name = "cmbThemes";
             this.cmbThemes.Size = new System.Drawing.Size(140, 21);
             this.cmbThemes.TabIndex = 9;
-            this.cmbThemes.SelectedIndexChanged += new System.EventHandler(this.cmbThemes_SelectedIndexChanged);
             // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(313, 439);
+            this.ClientSize = new System.Drawing.Size(311, 343);
             this.Controls.Add(this.cmbThemes);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblEditor);
@@ -173,6 +172,8 @@
             this.Controls.Add(this.btnSetColorOfVisualizerBackground);
             this.Controls.Add(this.lblColorOfVisualizerBackground);
             this.Controls.Add(this.lblVisualizer);
+            this.MaximumSize = new System.Drawing.Size(327, 382);
+            this.MinimumSize = new System.Drawing.Size(327, 382);
             this.Name = "SettingsForm";
             this.Text = "Ustawienia ";
             ((System.ComponentModel.ISupportInitialize)(this.nudRealPixelsPerEditorPixels)).EndInit();

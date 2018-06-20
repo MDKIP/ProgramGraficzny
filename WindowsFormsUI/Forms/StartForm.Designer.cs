@@ -82,13 +82,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 461);
+            this.ClientSize = new System.Drawing.Size(384, 261);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnLoadGraphic);
             this.Controls.Add(this.btnCreateGraphics);
             this.Controls.Add(this.lblName);
-            this.MaximumSize = new System.Drawing.Size(400, 500);
-            this.MinimumSize = new System.Drawing.Size(400, 500);
+            this.MaximumSize = new System.Drawing.Size(400, 300);
+            this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "StartForm";
             this.Text = "Program Name (Program Version)";
             this.Load += new System.EventHandler(this.StartForm_Load);

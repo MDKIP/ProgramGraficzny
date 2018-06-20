@@ -12,14 +12,6 @@ namespace ProgramGraficznyClasses
     /// </summary>
     static public class Factory
     {
-        static public SettingsInfo GetSettings()
-        {
-            return new SettingsInfo()
-            {
-                StandardRPPEP = 50,
-                VisualizerBackgroundColor = Color.White,
-            };
-        }
         /// <summary>
         /// Zwraca tekst reprezentujący pojawienie się nowej instancji klasy. Do użycia w ILog.
         /// </summary>
@@ -60,7 +52,7 @@ namespace ProgramGraficznyClasses
             bool typeBeforeMsg = true;
 
             // Zwracanie nowego ILog.
-            return new LocalLog(acceptableTypes, typeBeforeMsg);
+            return new EmptyLog();
         }
         /// <summary>
         /// Tworzy nowy INotificator.
@@ -74,8 +66,8 @@ namespace ProgramGraficznyClasses
         {
             IThemesController output = new ThemesManager();
 
-            output.LoadThemes("Themes");
             output.AddTheme(new EditorTheme("Standard", Color.FromKnownColor(KnownColor.Control), Color.FromKnownColor(KnownColor.Control), Color.Black));
+            output.LoadThemes("Themes");
 
             return output;
         }

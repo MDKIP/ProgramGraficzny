@@ -183,7 +183,7 @@
             this.lblSizePerPixel.Name = "lblSizePerPixel";
             this.lblSizePerPixel.Size = new System.Drawing.Size(115, 19);
             this.lblSizePerPixel.TabIndex = 13;
-            this.lblSizePerPixel.Text = "Rozmiar na piksel";
+            this.lblSizePerPixel.Text = "RPPEP";
             // 
             // nudSizePerPixel
             // 

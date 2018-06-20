@@ -49,6 +49,7 @@
     <Compile Include="Graphics Manipulation\EventArgs\GraphicChangedEventArgs.cs" />
     <Compile Include="Graphics Manipulation\IPixelArtOperation.cs" />
     <Compile Include="Graphics Manipulation\PixelArtOperation.cs" />
+    <Compile Include="Log\EmptyLog.cs" />
     <Compile Include="Log\LocalLog.cs" />
     <Compile Include="Notifications\INotificator.cs" />
     <Compile Include="Notifications\MessageBoxNotificator.cs" />
@@ -72,6 +73,5 @@
     <Compile Include="Graphics Manipulation\IGraphic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

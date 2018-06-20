@@ -48,6 +48,7 @@ namespace WindowsFormsUI
             cmbThemes.ForeColor = ProgramInfo.CurrentTheme.TextColor;
             nudRealPixelsPerEditorPixels.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
             nudRealPixelsPerEditorPixels.ForeColor = ProgramInfo.CurrentTheme.TextColor;
+            btnSetColorOfVisualizerBackground.BackColor = ProgramInfo.MainSettings.VisualizerBackgroundColor;
 
             // Wczytywanie stylów.
             cmbThemes.Items.RemoveAll();
@@ -68,16 +69,16 @@ namespace WindowsFormsUI
                 settings.VisualizerBackgroundColor = outputColor;
             }
         }
-        private void cmbThemes_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ProgramInfo.CurrentTheme = ProgramInfo.MainThemesController.GetTheme(cmbThemes.Text);
-        }
         private void btnSaveChanges_Click(object sender, EventArgs e)
         {
             settings.StandardRPPEP = (int)nudRealPixelsPerEditorPixels.Value;
+            ProgramInfo.CurrentTheme = ProgramInfo.MainThemesController.GetTheme(cmbThemes.Text);
 
             ProgramInfo.MainSettings = settings;
             FormsManager.ReloadAllForms();
+            Program.SaveSettings();
+
+            Close();
         }
     }
 }

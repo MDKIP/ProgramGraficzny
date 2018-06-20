@@ -1,0 +1,6 @@
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\bin\Release\ProgramGraficznyClasses.dll
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\bin\Release\ProgramGraficznyClasses.pdb
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\obj\Release\ProgramGraficznyClasses.csprojResolveAssemblyReference.cache
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\obj\Release\ProgramGraficznyClasses.csproj.CoreCompileInputs.cache
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\obj\Release\ProgramGraficznyClasses.dll
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\ProgramGraficznyClasses\obj\Release\ProgramGraficznyClasses.pdb

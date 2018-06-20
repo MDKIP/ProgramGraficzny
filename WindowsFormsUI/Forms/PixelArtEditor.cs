@@ -61,6 +61,7 @@ namespace WindowsFormsUI
             miFile.MenuItems.Add(new MenuItem("Zapisz", miSave_Click));
             miFile.MenuItems.Add(new MenuItem("Wczytaj", miLoad_Click));
             MenuItem miSettings = new MenuItem("Ustawienia", miSettings_Click);
+            miSettings.MenuItems.Add(new MenuItem("Blokuj Rozmiar Siatki", miBlockNetSize_Click));
             Menu.MenuItems.Add(miFile);
             Menu.MenuItems.Add(miSettings);
         }
@@ -78,6 +79,7 @@ namespace WindowsFormsUI
         private Point[,] topsPositions;
         private Color[,] colorMap;
         private bool saveOperations = true;
+        private bool blockNetSize = false;
         private int pixels;
         private IPixelArtToolbox toolbox;
         private INotificator notificator;
@@ -196,12 +198,14 @@ namespace WindowsFormsUI
         }
         private void DrawSquare(Point topA, Point topB, Color color)
         {
+            
             // Dobieranie większych i mniejszych wartości osi X i Y.
             int minX = (topA.X <= topB.X) ? topA.X : topB.X;
             int minY = (topA.Y <= topB.Y) ? topA.Y : topB.Y;
             int maxX = (topA.X >= topB.X) ? topA.X : topB.X;
             int maxY = (topA.Y >= topB.Y) ? topA.Y : topB.Y;
 
+            
             // Iterowanie przez każdy piksel w kwadracie.
             for (int y = minY; y < maxY; y++)
             {
@@ -212,6 +216,11 @@ namespace WindowsFormsUI
                     coloredPixels.Add(new Point(x, y));
                 }
             }
+            
+            /*
+            Graphics g = Graphics.FromImage(bitmap);
+            g.FillRectangle(new SolidBrush(color), minX, minY, maxX - minX, maxY - minY);
+            */
 
             OnGraphicChanged();
         }
@@ -388,15 +397,11 @@ namespace WindowsFormsUI
         }
         private void PixelArtEditor_ResizeEnd(object sender, EventArgs e)
         {
-            try
+            if (!blockNetSize)
             {
                 Clear();
                 DrawNet();
                 DrawPixels();
-            }
-            catch (Exception error)
-            {
-                notificator.Notify(error);
             }
         }
         private void PixelArtEditor_KeyDown(object sender, KeyEventArgs e)
@@ -470,6 +475,12 @@ namespace WindowsFormsUI
         private void miNew_Click(object sender, EventArgs e)
         {
             FormsManager.ShowNewGraphicForm(null);
+        }
+        private void miBlockNetSize_Click(object sender, EventArgs e)
+        {
+            MenuItem miBlockNetSize = sender as MenuItem;
+
+            blockNetSize = miBlockNetSize.Checked = !miBlockNetSize.Checked;
         }
     }
 }

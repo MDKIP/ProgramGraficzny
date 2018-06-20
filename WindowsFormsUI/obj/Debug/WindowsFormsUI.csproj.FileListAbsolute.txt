@@ -18,3 +18,7 @@ F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\Win
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.PixelArtToolboxForm.resources
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.GraphicsVisualizer.resources
 F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.SettingsForm.resources
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\WindowsFormsUI.exe.manifest
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\bin\Debug\WindowsFormsUI.application
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.exe.manifest
+F:\Projekty\Projekty Visual Studio\ProgramGraficzny\WindowsFormsUI\obj\Debug\WindowsFormsUI.application
