@@ -49,19 +49,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>nZF+WwMxEmmDk4sbZWK/ybasVHziDy2lW5NtUlsir3w=</dsig:DigestValue>
+        <dsig:DigestValue>T5MtWPCf62xotN34T8ZXGoQu6HaPC+UV9czMrU78g+c=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WindowsFormsUI.exe" size="55776">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WindowsFormsUI.exe" size="54240">
       <assemblyIdentity name="WindowsFormsUI" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>+ShELJXouV0LZDjkBetOHlM11fvn+c3U08laCSfPC1I=</dsig:DigestValue>
+        <dsig:DigestValue>Zc+bLzWCRkhAcVC1KetXOMLBCk1zDq7vYd4re6SQSI8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

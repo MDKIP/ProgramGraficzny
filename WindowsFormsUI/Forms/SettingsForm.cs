@@ -66,12 +66,12 @@ namespace WindowsFormsUI
             {
                 Color outputColor = dialog.Color;
                 btnSetColorOfVisualizerBackground.BackColor = outputColor;
-                settings.VisualizerBackgroundColor = outputColor;
             }
         }
         private void btnSaveChanges_Click(object sender, EventArgs e)
         {
             settings.StandardRPPEP = (int)nudRealPixelsPerEditorPixels.Value;
+            settings.VisualizerBackgroundColor = btnSetColorOfVisualizerBackground.BackColor;
             ProgramInfo.CurrentTheme = ProgramInfo.MainThemesController.GetTheme(cmbThemes.Text);
 
             ProgramInfo.MainSettings = settings;

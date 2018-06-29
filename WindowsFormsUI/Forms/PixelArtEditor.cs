@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using ProgramGraficznyClasses;
 
 namespace WindowsFormsUI
 {
-    public partial class PixelArtEditor : Form, IGraphicEditorStandard
+    public partial class PixelArtEditor : Form, IGraphicEditorStandard, IProgramGraficznyForm
     {
         public PixelArtEditor(int pixels, IPixelArtToolbox toolbox, IProject project, ILog log, INotificator notificator)
         {
@@ -44,14 +45,12 @@ namespace WindowsFormsUI
             InitializeComponent();
 
             // Przypisywanie.
-            this.pixels = pixels;
+            pixelsValue = pixels;
             this.toolbox = toolbox;
             this.notificator = notificator;
             this.project = project;
             this.log = log;
-            bitmap = new Bitmap(Screen.PrimaryScreen.WorkingArea.Width, Screen.PrimaryScreen.WorkingArea.Height);
-            topsPositions = new Point[pixels + 1, pixels + 1];
-            colorMap = new Color[pixels, pixels];
+            this.pixels = new PictureBox[pixelsValue, pixelsValue];
 
             // Tworzenie menu.
             MainMenu menu = new MainMenu();
@@ -64,6 +63,8 @@ namespace WindowsFormsUI
             miSettings.MenuItems.Add(new MenuItem("Blokuj Rozmiar Siatki", miBlockNetSize_Click));
             Menu.MenuItems.Add(miFile);
             Menu.MenuItems.Add(miSettings);
+
+            Reload();
         }
 
         public event EventHandler GraphicChanged;
@@ -71,188 +72,90 @@ namespace WindowsFormsUI
         public bool HasProject { get => project != null; }
         public int RealPixelsPerEditorPixels { get; set; }
 
-        private List<Point> coloredPixelsCoordinates = new List<Point>();
-        private List<Point> coloredPixels = new List<Point>();
+        private Dictionary<PictureBox, PixelInfo> pixelsInfo = new Dictionary<PictureBox, PixelInfo>();
+        private PictureBox[,] pixels;
         private List<IPixelArtOperation> executedOperations = new List<IPixelArtOperation>();
         private Stack<IPixelArtOperation> futureOperations = new Stack<IPixelArtOperation>();
-        private Bitmap bitmap;
-        private Point[,] topsPositions;
-        private Color[,] colorMap;
-        private bool saveOperations = true;
+        private bool fastPaint = false;
         private bool blockNetSize = false;
-        private int pixels;
+        private int pixelsValue;
+        private int pixelsSpace = 2;
         private IPixelArtToolbox toolbox;
         private INotificator notificator;
         private IProject project;
         private ILog log;
 
-        private void DrawNet()
-        {
-            // Oblicznie odległości między liniami w osiach X i Y.
-            int minusConst = 50;
-            int xDistance = (Size.Width - minusConst) / pixels;
-            int yDistance = (Size.Height - minusConst) / pixels;
-            int distance = (xDistance >= yDistance) ? yDistance : xDistance;
-
-            // Oblicznie granicy rysowania.
-            int nonDrawBorder = (xDistance < yDistance) ? xDistance * pixels : yDistance * pixels;
-
-            // Rysowanie pojedynczych linni pionowych.
-            for (int l = 0, nl = 0; nl < pixels + 1; l += distance, nl++)
-            {
-                DrawStraightLine(new Point(l, 0), new Point(l, nonDrawBorder));
-            }
-
-            // Rysowanie pojedynczych linni poziomych.
-            for (int l = 0, nl = 0; nl < pixels + 1; l += distance, nl++)
-            {
-                DrawStraightLine(new Point(0, l), new Point(nonDrawBorder, l));
-            }
-
-            // Obliczanie pozycji wierzchołków i zapisywanie tych danych do topsPositions.
-            for (int yPos = 0, npY = 0; npY < pixels + 1; yPos += distance, npY++)
-            {
-                for (int xPos = 0, npX = 0; npX < pixels + 1; xPos += distance, npX++)
-                {
-                    topsPositions[npX, npY] = new Point(xPos, yPos);
-                }
-            }
-
-            // Informowanie o zmianie grafiki.
-            OnGraphicChanged();
-
-            // Metody lokalne.
-            void DrawStraightLine(Point a, Point b)
-            {
-                // Wybieranie osi w której linnia ma być prosta.
-                if (a.X == b.X)
-                {
-                    // Szukanie mniejszej osi Y w punktach.
-                    if (a.Y <= b.Y)
-                    {
-                        // Ustawianie pojedynczych pikseli.
-                        for (int i = a.Y; i < b.Y; i++)
-                        {
-                            bitmap.SetPixel(a.X, i, Color.Black);
-                            coloredPixels.Add(new Point(a.X, i));
-                        }
-                    }
-                    else
-                    {
-                        // Ustawianie pojedynczych pikseli.
-                        for (int i = b.Y; i < a.Y; i++)
-                        {
-                            bitmap.SetPixel(a.X, i, Color.Black);
-                            coloredPixels.Add(new Point(a.X, i));
-                        }
-                    }
-                }
-                else if (a.Y == b.Y)
-                {
-                    // Szukanie mniejszej osi X w punktach.
-                    if (a.X <= b.X)
-                    {
-                        // Ustawianie pojedynczych pikseli.
-                        for (int i = a.X; i < b.X; i++)
-                        {
-                            bitmap.SetPixel(i, a.Y, Color.Black);
-                            coloredPixels.Add(new Point(i, a.Y));
-                        }
-                    }
-                    else
-                    {
-                        // Ustawianie pojedynczych pikseli.
-                        for (int i = b.X; i < a.X; i++)
-                        {
-                            bitmap.SetPixel(i, a.Y, Color.Black);
-                            coloredPixels.Add(new Point(i, a.Y));
-                        }
-                    }
-                }
-            }
-        }
         private void DrawPixels()
         {
-            saveOperations = false;
-            foreach (Point pixelCoordiante in coloredPixelsCoordinates)
-            {
-                PaintPixel(pixelCoordiante, colorMap[pixelCoordiante.X, pixelCoordiante.Y]);
-            }
-            saveOperations = true;
-        }
-        private void PaintPixel(Point coordinates, Color color)
-        {
-            // Zapisywanie danych.
-            if (saveOperations)
-            {
-                coloredPixelsCoordinates.Add(coordinates);
-                executedOperations.Add(new PixelArtOperation(coordinates, color, GetColorOfPixel(coordinates)));
-                futureOperations.Clear();
-            }
+            int minAxis = ClientSize.Width > ClientSize.Height ? ClientSize.Height : ClientSize.Width;
+            int allSpace = pixelsSpace * pixelsValue;
+            int spaceForPixels = minAxis - allSpace;
+            int spaceForPixel = spaceForPixels / pixelsValue;
 
-            // Malowanie.
-            Point topA = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
-            Point topB = topsPositions[coordinates.X + 1, coordinates.Y + 1];
-            DrawSquare(topA, topB, color);
-            colorMap[coordinates.X, coordinates.Y] = color;
-        }
-        private void DrawSquare(Point topA, Point topB, Color color)
-        {
-            
-            // Dobieranie większych i mniejszych wartości osi X i Y.
-            int minX = (topA.X <= topB.X) ? topA.X : topB.X;
-            int minY = (topA.Y <= topB.Y) ? topA.Y : topB.Y;
-            int maxX = (topA.X >= topB.X) ? topA.X : topB.X;
-            int maxY = (topA.Y >= topB.Y) ? topA.Y : topB.Y;
-
-            
-            // Iterowanie przez każdy piksel w kwadracie.
-            for (int y = minY; y < maxY; y++)
+            for (int y = 0; y < pixelsValue; y++)
             {
-                for (int x = minX; x < maxX; x++)
+                for (int x = 0; x < pixelsValue; x++)
                 {
-                    // Ustawianie koloru.
-                    bitmap.SetPixel(x, y, color);
-                    coloredPixels.Add(new Point(x, y));
+                    int xPos = x == 0 ? 0 : pixels[x - 1, y].Location.X + spaceForPixel + pixelsSpace;
+                    int yPos = y == 0 ? 0 : pixels[x, y - 1].Location.Y + spaceForPixel + pixelsSpace;
+
+                    PictureBox newPixel = new PictureBox()
+                    {
+                        Width = spaceForPixel,
+                        Height = spaceForPixel,
+                        Location = new Point(xPos, yPos),
+                        BackColor = ProgramInfo.CurrentTheme.ButtonsColor,
+                    };
+                    newPixel.MouseDown += pixel_MouseDown;
+                    newPixel.MouseEnter += pixel_MouseEnter;
+                    Controls.Add(newPixel);
+                    pixels[x, y] = newPixel;
                 }
             }
-            
-            /*
-            Graphics g = Graphics.FromImage(bitmap);
-            g.FillRectangle(new SolidBrush(color), minX, minY, maxX - minX, maxY - minY);
-            */
 
-            OnGraphicChanged();
-        }
-        private Point GetClickCordinates(Point clickPos)
-        {
-            for (int yIndex = 0; yIndex < pixels; yIndex++)
+            foreach (PictureBox pixel in pixels)
             {
-                for (int xIndex = 0; xIndex < pixels; xIndex++)
+                pixelsInfo.Add(pixel, new PixelInfo());
+            }
+        }
+        private void DeleteAllPixels()
+        {
+            foreach (PictureBox pixel in pixels)
+            {
+                Controls.Remove(pixel);
+                pixelsInfo.Remove(pixel);
+                pixel.Dispose();
+            }
+        }
+        private void PaintPixel(int x, int y, Color c, bool saveOperation)
+        {
+            PictureBox pixel = pixels[x, y];
+            Color prevColor = pixel.BackColor;
+            pixel.BackColor = c;
+
+            pixelsInfo[pixel].IsColored = true;
+
+            if (saveOperation)
+            {
+                futureOperations.Clear();
+                executedOperations.Add(new PixelArtOperation(new Point(x, y), pixel.BackColor, prevColor));
+            }
+        }
+        private Point FindCoordiantesOfPixel(PictureBox pixel)
+        {
+            for (int y = 0; y < pixelsValue; y++)
+            {
+                for (int x = 0; x < pixelsValue; x++)
                 {
-                    if (topsPositions[xIndex, yIndex].IsSmallerThen(clickPos) && topsPositions[xIndex + 1, yIndex + 1].IsGratherThen(clickPos))
-                    {
-                        return new Point(xIndex, yIndex);
-                    }
+                    if (pixel == pixels[x, y]) return new Point(x, y);
                 }
             }
             return new Point(-1, -1);
         }
-        private Color GetColorOfPixel(Point coordinates)
-        {
-            Point p = new Point(topsPositions[coordinates.X, coordinates.Y].X + 1, topsPositions[coordinates.X, coordinates.Y].Y + 1);
-            return bitmap.GetPixel(p.X, p.Y);
-        }
+           
         // Zaimplementowane z IGraphicEditorStandard.
         public void Clear()
         {
-            // Wyczyszczanie każdego pokolorowaengo piksela. (robię to w while bo w foreach nie mogę modyfikować kolekcji)
-            while (coloredPixels.Count != 0)
-            {
-                Point pixel = coloredPixels[0];
-                bitmap.SetPixel(pixel.X, pixel.Y, Color.White);
-                coloredPixels.RemoveAt(0);
-            }
         }
         public void DrawAllAgain()
         {
@@ -260,38 +163,31 @@ namespace WindowsFormsUI
         }
         public void NextState()
         {
-            // Zapobieganie błędom.
-            //notificator.Notify(futureOperations.Count.ToString());
-            if (futureOperations.Count == 0) return;
-            
-
-            // Zapisywanie danych.
+            if (futureOperations.Count <= 0) return;
             IPixelArtOperation operation = futureOperations.Pop();
             executedOperations.Add(operation);
-
-            // Zmiany w edytorze.
-            saveOperations = false;
-            PaintPixel(operation.Coordiantes, operation.AfterColor);
-            saveOperations = true;
-            OnGraphicChanged();
+            PaintPixel(operation.Coordiantes.X, operation.Coordiantes.Y, operation.AfterColor, false);
         }
         public void ReturnState()
         {
-            // Przypisywanie zmiennych i zapobieganie błędom.
-            int lastIndex = executedOperations.Count - 1;
-            if (lastIndex < 0) return;
-            //notificator.Notify(futureOperations.Count.ToString());
+            if (executedOperations.Count <= 0) return;
+            IPixelArtOperation operation = executedOperations[executedOperations.Count - 1];
+            PixelInfo pixelInfo = pixelsInfo[pixels[operation.Coordiantes.X, operation.Coordiantes.Y]];
 
-            // Zapisywanie danych.
-            IPixelArtOperation operation = executedOperations[lastIndex];
-            executedOperations.RemoveAt(lastIndex);
+            executedOperations.RemoveAt(executedOperations.Count - 1);
             futureOperations.Push(operation);
 
-            // Zmiany w edytorze.
-            saveOperations = false;
-            PaintPixel(operation.Coordiantes, operation.BeforeColor);
-            saveOperations = true;
-            OnGraphicChanged();
+            PaintPixel(operation.Coordiantes.X, operation.Coordiantes.Y, operation.BeforeColor, false);
+
+            if (pixelInfo.ExecutedOperations.Count >= 1)
+            {
+                pixelInfo.ExecutedOperations.RemoveAt(pixelInfo.ExecutedOperations.Count - 1);
+            }
+
+            if (pixelInfo.ExecutedOperations.Count <= 1)
+            {
+                pixelInfo.IsColored = false;
+            }
         }
         public void Save(string path)
         {
@@ -299,23 +195,59 @@ namespace WindowsFormsUI
             {
                 CreateBitmap().Save(path);
             }
+            else if (path.EndsWith(".jpeg"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Jpeg);
+            }
+            else if (path.EndsWith(".png"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Png);
+            }
+            else if (path.EndsWith(".bmp"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Bmp);
+            }
+            else if (path.EndsWith(".emf"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Emf);
+            }
+            else if (path.EndsWith(".exif"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Exif);
+            }
+            else if (path.EndsWith(".gif"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Gif);
+            }
+            else if (path.EndsWith(".ico"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Icon);
+            }
+            else if (path.EndsWith(".tiff"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Tiff);
+            }
+            else if (path.EndsWith(".wmf"))
+            {
+                CreateBitmap().Save(path, ImageFormat.Wmf);
+            }
             else if (path.EndsWith(".pgpa"))
             {
                 List<string> lines = new List<string>();
 
-                for (int y = 0; y < pixels; y++)
+                for (int y = 0; y < pixelsValue; y++)
                 {
                     string line = "";
 
-                    for (int x = 0; x < pixels; x++)
+                    for (int x = 0; x < pixelsValue; x++)
                     {
                         if (x != 0)
                         {
-                            line += "@" + colorMap[x, y].ToArgb(); 
+                            line += '@' + pixels[x, y].BackColor.ToArgb().ToString();
                         }
                         else
                         {
-                            line += colorMap[x, y].ToArgb();
+                            line = pixels[x, y].BackColor.ToArgb().ToString();
                         }
                     }
 
@@ -327,56 +259,67 @@ namespace WindowsFormsUI
         }
         public void LoadFile(string path)
         {
-            if (path.EndsWith(".pgpa"))
+            if (!path.EndsWith(".pgpa")) return;
+
+            string[] lines = File.ReadAllLines(path);
+            pixelsValue = lines.Length;
+            DeleteAllPixels();
+            DrawPixels();
+
+            int x = 0, y = 0;
+            foreach (string line in lines)
             {
-                string[] lines = File.ReadAllLines(path);
-                pixels = lines.Length;
-                int x = 0, y = 0;
-                colorMap = new Color[pixels, pixels];
-                topsPositions = new Point[pixels + 1, pixels + 1];
+                string[] colorsAsStrings = line.Split('@');
 
-                foreach (string line in lines)
+                foreach (string colorAsString in colorsAsStrings)
                 {
-                    //notificator.Notify("d");
-                    string[] colors = line.Split('@');
+                    Color color = Color.FromArgb(int.Parse(colorAsString));
+                    Color pixelColor = color.GetWithAlpha(255);
 
-                    foreach (string color in colors)
-                    {
-                        colorMap[x, y] = Color.FromArgb(int.Parse(color));
-                        if (!colorMap[x, y].IsEmpty)
-                        {
-                            coloredPixelsCoordinates.Add(new Point(x, y));
-                        }
+                    bool isEmpty = (pixelColor == Color.Empty);
 
-                        x++;
-                    }
-                    x = 0;
-                    y++;
+                    pixels[x, y].BackColor = isEmpty ? ProgramInfo.CurrentTheme.ButtonsColor : pixelColor;
+                    pixelsInfo[pixels[x, y]].ExecutedOperations.Clear();
+                    pixelsInfo[pixels[x, y]].IsColored = !isEmpty;
+
+                    x++;
                 }
-
-                Clear();
-                DrawNet();
-                DrawPixels();
-                OnGraphicChanged();
+                x = 0;
+                y++;
             }
         }
         public Bitmap CreateBitmap()
         {
-            Bitmap image = new Bitmap(RealPixelsPerEditorPixels * pixels, RealPixelsPerEditorPixels * pixels);
-            Graphics graphics = Graphics.FromImage(image);
+            Bitmap bitmap = new Bitmap(RealPixelsPerEditorPixels * pixelsValue, RealPixelsPerEditorPixels * pixelsValue);
+            Graphics g = Graphics.FromImage(bitmap);
 
-            for (int yIndex = 0, yPos = 0; yIndex < pixels; yIndex++, yPos += RealPixelsPerEditorPixels)
+            for (int y = 0, yIndex = 0; y < RealPixelsPerEditorPixels * pixelsValue; y += RealPixelsPerEditorPixels, yIndex++)
             {
-                for (int xIndex = 0, xPos = 0; xIndex < pixels; xIndex++, xPos += RealPixelsPerEditorPixels)
+                for (int x = 0, xIndex = 0; x < RealPixelsPerEditorPixels * pixelsValue; x += RealPixelsPerEditorPixels, xIndex++)
                 {
-                    Brush b = new SolidBrush(colorMap[xIndex, yIndex]);
-                    Size s = new Size(RealPixelsPerEditorPixels, RealPixelsPerEditorPixels);
-                    Rectangle r = new Rectangle(new Point(xPos, yPos), s);
-                    graphics.FillRectangle(b, r);
+                    if (pixelsInfo[pixels[xIndex, yIndex]].IsColored)
+                    {
+                        g.FillRectangle(new SolidBrush(pixels[xIndex, yIndex].BackColor), x, y, RealPixelsPerEditorPixels, RealPixelsPerEditorPixels); 
+                    }
                 }
             }
 
-            return image;
+            return bitmap;
+        }
+        // Zaimplementowane z IProgramGraficznyForm
+        public void Reload()
+        {
+            BackColor = ProgramInfo.CurrentTheme.BackgroundColor;
+
+            foreach (PictureBox pixel in pixels)
+            {
+                if (pixel == null) continue;
+
+                if (!pixelsInfo[pixel].IsColored)
+                {
+                    pixel.BackColor = ProgramInfo.CurrentTheme.ButtonsColor;
+                }
+            }
         }
         // Do eventów.
         protected void OnGraphicChanged()
@@ -385,30 +328,38 @@ namespace WindowsFormsUI
             {
                 GraphicChanged(this, new EventArgs()); 
             }
-
-            pcbImage.Image = bitmap;
         }
 
         private void PixelArtEditor_Load(object sender, EventArgs e)
         {
-            Text = "Edytor Piksel Artów";
-
-            DrawNet();
+            DrawPixels();
         }
         private void PixelArtEditor_ResizeEnd(object sender, EventArgs e)
         {
             if (!blockNetSize)
             {
-                Clear();
-                DrawNet();
-                DrawPixels();
+                for (int y = 0; y < pixelsValue; y++)
+                {
+                    for (int x = 0; x < pixelsValue; x++)
+                    {
+                        PictureBox currentPixel = pixels[x, y];
+                        int minAxis = ClientSize.Width > ClientSize.Height ? ClientSize.Height : ClientSize.Width;
+                        int allSpace = pixelsSpace * pixelsValue;
+                        int spaceForPixels = minAxis - allSpace;
+                        int spaceForPixel = spaceForPixels / pixelsValue;
+                        int xPos = x == 0 ? 0 : pixels[x - 1, y].Location.X + spaceForPixel + pixelsSpace;
+                        int yPos = y == 0 ? 0 : pixels[x, y - 1].Location.Y + spaceForPixel + pixelsSpace;
+                        currentPixel.Width = spaceForPixel;
+                        currentPixel.Height = spaceForPixel;
+                        currentPixel.Location = new Point(xPos, yPos);
+                    }
+                } 
             }
         }
         private void PixelArtEditor_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control)
             {
-               
                 switch (e.KeyCode)
                 {
                     case Keys.Z:
@@ -426,28 +377,38 @@ namespace WindowsFormsUI
                             FormsManager.ShowGraphicsVisualizer(CreateBitmap());
                         }
                         break;
+                    case Keys.A:
+                        {
+                            fastPaint = !fastPaint;
+                        }
+                        break;
                 }
             }
         }
         private void pcbImage_Click(object sender, EventArgs e)
         {
-            MouseEventArgs args = e as MouseEventArgs;
-            // Pobieranie koordynatów kliknięcia.
-            Point coordinates = GetClickCordinates(args.Location);
+        }
+        private void pixel_MouseDown(object sender, MouseEventArgs e)
+        {
+            PictureBox pixel = sender as PictureBox;
+            Point coordinates = FindCoordiantesOfPixel(pixel);
 
-            log.Write($"Użytkownik kliknął pcbImage na pozycji {args.Location}. Koordynaty to {coordinates}.");
-
-            // Zamalowywanie piksela.
-            if (coordinates != new Point(-1, -1))
+            if (e.Button == MouseButtons.Left)
             {
-                if (args.Button == MouseButtons.Left)
-                {
-                    PaintPixel(coordinates, toolbox.GetColor());
-                }
-                else if (args.Button == MouseButtons.Right)
-                {
-                    PaintPixel(coordinates, Color.Empty);
-                }
+                PaintPixel(coordinates.X, coordinates.Y, toolbox.GetColor(), true); 
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                PaintPixel(coordinates.X, coordinates.Y, ProgramInfo.CurrentTheme.ButtonsColor, true);
+                pixelsInfo[pixel].IsColored = false;
+            }
+        }
+        private void pixel_MouseEnter(object sender, EventArgs e)
+        {
+            if (fastPaint)
+            {
+                Point coordinates = FindCoordiantesOfPixel(sender as PictureBox);
+                PaintPixel(coordinates.X, coordinates.Y, toolbox.GetColor(), true);
             }
         }
         private void miSettings_Click(object sneder, EventArgs e)
@@ -457,7 +418,17 @@ namespace WindowsFormsUI
         private void miSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "Program Graficzny Piksel Art (*.pgpa) |.pgpa|JPG files (*.jpg) |.jpg";
+            dialog.Filter = "Program Graficzny Piksel Art (*.pgpa) |.pgpa" +
+                "|JPG (*.jpg) |.jpg" +
+                "|Joint Photographic Experts Group (*.jpeg) |.jpeg" +
+                "|Portable Network Graphics (*.png) |.png" +
+                "|Bitmap (*.bmp) |.bmp" +
+                "|Enhanced Metafile (*.emf) |.emf" +
+                "|Exchangeable File (*.exif) |.exif" +
+                "|Graphics Interchange Format (*.gif) |.gif" +
+                "|Windows Icon (*.ico) |.ico" +
+                "|Tagged Image File Format (*.tiff) |.tiff" +
+                "|Windows Metafile (*.wmf) |.wmf";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 Save(dialog.FileName);

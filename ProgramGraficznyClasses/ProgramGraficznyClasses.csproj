@@ -49,6 +49,7 @@
     <Compile Include="Graphics Manipulation\EventArgs\GraphicChangedEventArgs.cs" />
     <Compile Include="Graphics Manipulation\IPixelArtOperation.cs" />
     <Compile Include="Graphics Manipulation\PixelArtOperation.cs" />
+    <Compile Include="Graphics Manipulation\PixelInfo.cs" />
     <Compile Include="Log\EmptyLog.cs" />
     <Compile Include="Log\LocalLog.cs" />
     <Compile Include="Notifications\INotificator.cs" />

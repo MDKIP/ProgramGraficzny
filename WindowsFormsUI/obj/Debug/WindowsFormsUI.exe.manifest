@@ -42,26 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ProgramGraficznyClasses.dll" size="22528">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ProgramGraficznyClasses.dll" size="23040">
       <assemblyIdentity name="ProgramGraficznyClasses" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>DIlOEUuhtQkpCKf8pEoCR/lODW+OssKItRgVc1oJq+Y=</dsig:DigestValue>
+        <dsig:DigestValue>58n3ocN67f2tEve79HZifpGE34JsF4IuzhKdQed5PIQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WindowsFormsUI.exe" size="58336">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WindowsFormsUI.exe" size="59360">
       <assemblyIdentity name="WindowsFormsUI" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>viK+xUJ7dND9S7e3WOCBDARlDiqUTf9D0Dm+yXKcX1k=</dsig:DigestValue>
+        <dsig:DigestValue>3be4KHbmXvpi/KD25HnIsC+S4F3D4TBTtntOLTXiSjE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

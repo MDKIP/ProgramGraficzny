@@ -14,7 +14,7 @@ namespace ProgramGraficznyClasses
         static public EditorTheme CurrentTheme { get; set; }
         static public SettingsInfo MainSettings { get; set; }
         static public string ProgramName { get; } = "Program Graficzny";
-        static public string Version { get; } = "Alpha 0.1";
+        static public string Version { get; } = "Alpha 0.2";
         static public IThemesController MainThemesController { get; set; }
     }
 }

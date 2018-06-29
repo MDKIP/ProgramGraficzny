@@ -102,7 +102,7 @@ namespace WindowsFormsUI
         // Zaimplementowane z ISimpleToolbox.
         public Color GetColor()
         {
-            return selectedColor;
+            return selectedColor != Color.Empty ? selectedColor : ProgramInfo.CurrentTheme.ButtonsColor;
         }
         // Zaimplementowane z IProgramGraficznyForm
         public void Reload()

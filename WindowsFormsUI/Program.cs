@@ -35,7 +35,7 @@ namespace WindowsFormsUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Application.ThreadException += Application_ThreadException;
+            //Application.ThreadException += Application_ThreadException;
 
             // Odpala aplikację.
             Application.Run(FormsManager.ShowStartForm());
@@ -71,7 +71,7 @@ namespace WindowsFormsUI
         }
         static private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            notificator.Notify(e.Exception);
+            //notificator.Notify(e.Exception);
         }
     }
 }
